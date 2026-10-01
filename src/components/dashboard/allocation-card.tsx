@@ -1,0 +1,53 @@
+"use client";
+
+import { Layers } from "lucide-react";
+import { useDashboardPreferences } from "@/components/layout/dashboard-preferences";
+import { formatMoney, toToman } from "@/lib/format";
+import { ALLOCATION, ASSETS } from "@/lib/mock-data";
+import { AllocationBarChart } from "@/components/charts/allocation-bar-chart";
+import { Card, CardHeader } from "@/components/ui/card";
+
+/** Row 2 right — allocation weights as ranked horizontal bars. */
+export function AllocationCard() {
+  const { currency } = useDashboardPreferences();
+  const slices = ALLOCATION;
+  const largest = slices[0];
+  const largestAsset = ASSETS.find((asset) => asset.id === largest.id);
+  const money = (usd: number) =>
+    formatMoney(currency === "USD" ? usd : toToman(usd), currency, { compact: currency === "TOMAN" });
+
+  return (
+    <Card className="h-full">
+      <CardHeader
+        icon={<Layers className="size-[15px]" strokeWidth={1.8} />}
+        title="Asset Allocation"
+        subtitle="Weight of each asset class"
+      />
+
+      <div className="px-2 pb-1">
+        <AllocationBarChart data={slices} currency={currency} />
+      </div>
+
+      <div className="mt-auto border-t border-line-soft px-5 py-4">
+        <p className="eyebrow">Largest Position</p>
+        <div className="mt-2.5 flex items-center gap-2.5">
+          <span className="size-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: largest.color }} aria-hidden />
+          <span className="truncate text-[13px] font-semibold tracking-tight text-ink">
+            {largestAsset?.name ?? largest.label}
+          </span>
+          <span className="numeric text-[11px] font-medium text-ink-muted">
+            {largest.percentage.toFixed(1)}%
+          </span>
+          <span className="numeric ml-auto text-[13px] font-semibold tracking-tight text-ink">
+            {money(largest.value)}
+          </span>
+        </div>
+        <p className="mt-2 text-[11px] leading-relaxed text-ink-muted">
+          {largest.label} is the dominant holding, accounting for{" "}
+          <span className="font-medium text-ink-soft">{largest.percentage.toFixed(1)}%</span> of net assets across{" "}
+          {slices.length} positions.
+        </p>
+      </div>
+    </Card>
+  );
+}
