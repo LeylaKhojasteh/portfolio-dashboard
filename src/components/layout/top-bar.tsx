@@ -1,19 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, CalendarRange, Menu, RefreshCw } from "lucide-react";
-import type { Currency, DateRange } from "@/types";
+import { Bell, Menu, RefreshCw } from "lucide-react";
+import type { Currency, DateRange, Language } from "@/types";
 import { cx } from "@/lib/cx";
 import { CURRENCY_OPTIONS, DATE_RANGE_OPTIONS, SNAPSHOT_DATE } from "@/lib/mock-data";
 import { formatDate } from "@/lib/format";
+import { Dropdown } from "@/components/ui/dropdown";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
-const RANGE_COMPACT_LABELS: Record<DateRange, string> = {
-  "1M": "1M",
-  "3M": "3M",
-  "6M": "6M",
-  "1Y": "1Y",
-};
+const LANGUAGE_OPTIONS: { value: Language; label: string }[] = [
+  { value: "EN", label: "EN" },
+  { value: "FA", label: "FA" },
+];
 
 interface TopBarProps {
   currency: Currency;
@@ -30,6 +29,7 @@ export function TopBar({
   onDateRangeChange,
   onOpenMobileNav,
 }: TopBarProps) {
+  const [language, setLanguage] = useState<Language>("EN");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   function handleRefresh() {
@@ -38,7 +38,7 @@ export function TopBar({
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-canvas/88 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1720px] flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 sm:px-4 lg:h-[60px] lg:flex-nowrap lg:py-0">
         {/* Identity */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -58,22 +58,26 @@ export function TopBar({
           </div>
         </div>
 
-        {/* Period control */}
+        {/* Period filter */}
         <div className="order-last flex w-full items-center justify-start md:justify-center lg:order-none lg:w-auto">
-          <div className="flex items-center gap-2">
-            <CalendarRange className="hidden size-3.5 shrink-0 text-ink-faint sm:block" strokeWidth={1.8} />
-            <SegmentedControl
-              ariaLabel="Date range"
-              options={DATE_RANGE_OPTIONS}
-              value={dateRange}
-              onChange={onDateRangeChange}
-              compactLabels={RANGE_COMPACT_LABELS}
-            />
-          </div>
+          <Dropdown
+            ariaLabel="Time range"
+            label="Time Range"
+            options={DATE_RANGE_OPTIONS}
+            value={dateRange}
+            onChange={onDateRangeChange}
+          />
         </div>
 
-        {/* Display currency + account utilities */}
+        {/* Display units + account utilities */}
         <div className="flex shrink-0 items-center justify-end gap-2 lg:flex-1">
+          <SegmentedControl
+            ariaLabel="Interface language"
+            options={LANGUAGE_OPTIONS}
+            value={language}
+            onChange={setLanguage}
+          />
+
           <SegmentedControl
             ariaLabel="Display currency"
             options={CURRENCY_OPTIONS}
@@ -106,7 +110,7 @@ export function TopBar({
             >
               <Bell className="size-3.5" strokeWidth={1.9} />
               <span
-                className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-accent ring-2 ring-surface"
+                className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-gold ring-2 ring-surface"
                 aria-hidden
               />
             </button>

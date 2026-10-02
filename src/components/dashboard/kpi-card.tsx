@@ -9,7 +9,8 @@ const SPARK_COLORS: Record<KpiAccent, string> = {
   neutral: CHART_TOKENS.axisStrong,
   positive: CHART_TOKENS.positive,
   negative: CHART_TOKENS.negative,
-  accent: CHART_TOKENS.line,
+  /* Secondary accent — used by the Toman mirror card. */
+  accent: CHART_TOKENS.gold,
 };
 
 /**

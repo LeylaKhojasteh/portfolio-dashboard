@@ -5,9 +5,9 @@ import { formatNumber, trendDirection } from "@/lib/format";
 
 const TONE_STYLES: Record<KpiAccent, string> = {
   neutral: "border-line bg-surface-sunken text-ink-muted",
-  positive: "border-positive-line bg-positive-soft text-positive",
+  positive: "border-accent-line bg-accent-soft text-accent-deep",
   negative: "border-negative-line bg-negative-soft text-negative",
-  accent: "border-accent-line bg-accent-soft text-accent",
+  accent: "border-gold-line bg-gold-soft text-gold-deep",
 };
 
 interface TrendIndicatorProps {

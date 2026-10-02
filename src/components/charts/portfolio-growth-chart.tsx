@@ -34,7 +34,7 @@ export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowt
   const average = points.reduce((total, point) => total + point.value, 0) / Math.max(points.length, 1);
 
   return (
-    <div className="h-[196px] w-full overflow-hidden sm:h-[220px] lg:h-[244px]">
+    <div className="h-[236px] w-full overflow-hidden sm:h-[272px] lg:h-[304px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={points} margin={{ top: 14, right: 14, bottom: 2, left: 2 }}>
           <defs>
@@ -92,11 +92,11 @@ export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowt
             y={average}
             stroke={CHART_TOKENS.average}
             strokeDasharray="5 5"
-            strokeOpacity={0.8}
+            strokeOpacity={0.7}
             label={{
               value: "period average",
               position: "insideTopRight",
-              fill: CHART_TOKENS.axis,
+              fill: CHART_TOKENS.gold,
               fontSize: 10,
             }}
           />

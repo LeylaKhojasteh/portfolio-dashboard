@@ -4,7 +4,9 @@ export type Currency = "USD" | "TOMAN";
 
 export type TransactionType = "BUY" | "SELL" | "TRANSFER" | "DEPOSIT" | "WITHDRAW";
 
-export type DateRange = "1M" | "3M" | "6M" | "1Y";
+export type DateRange = "D" | "W" | "1M" | "3M" | "6M" | "1Y";
+
+export type Language = "EN" | "FA";
 
 export type TrendDirection = "up" | "down" | "flat";
 
@@ -95,4 +97,9 @@ export interface NavItem {
 export interface SegmentedOption<T extends string> {
   value: T;
   label: string;
+}
+
+export interface DropdownOption<T extends string> extends SegmentedOption<T> {
+  /** Optional secondary line shown under the label in the open menu. */
+  hint?: string;
 }

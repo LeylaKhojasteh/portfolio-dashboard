@@ -32,18 +32,21 @@ export function assetColor(symbol: string): string | undefined {
 }
 
 export const CHART_TOKENS = {
-  grid: "#e6e0d4",
-  axis: "#a39b8e",
-  axisStrong: "#7a736a",
-  /* Deep muted green — the chart's single emphasis colour, matching the accent. */
-  line: "#3d6b4c",
+  grid: "#ded5c4",
+  axis: "#a19889",
+  axisStrong: "#7b7368",
+  /* Primary emphasis — muted green, matching the accent. */
+  line: "#3f6b4d",
   lineSoft: "#7ea286",
-  average: "#a39b8e",
-  positive: "#3d6b4c",
-  negative: "#a04b42",
-  track: "#eee9e0",
-  tooltipSurface: "#fdfbf8",
-  tooltipBorder: "#e6e0d4",
+  /* Secondary emphasis — warm gold, used for reference marks and allocation. */
+  gold: "#94743c",
+  goldSoft: "#e2d2b0",
+  average: "#94743c",
+  positive: "#3f6b4d",
+  negative: "#9c4a41",
+  track: "#ebe4d6",
+  tooltipSurface: "#fbf8f2",
+  tooltipBorder: "#ded5c4",
 } as const;
 
 export const SPARKLINE_HEIGHT = 44;

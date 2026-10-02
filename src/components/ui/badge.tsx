@@ -7,8 +7,9 @@ export type BadgeTone = "blue" | "indigo" | "amber" | "green" | "red" | "neutral
 const TONE_STYLES: Record<BadgeTone, string> = {
   blue: "border-info-line bg-info-soft text-info",
   indigo: "border-violet-line bg-violet-soft text-violet",
-  amber: "border-warning-line bg-warning-soft text-warning",
-  green: "border-positive-line bg-positive-soft text-positive",
+  /* Transfer reads as the secondary warm accent rather than a warning. */
+  amber: "border-gold-line bg-gold-soft text-gold-deep",
+  green: "border-accent-line bg-accent-soft text-accent-deep",
   red: "border-negative-line bg-negative-soft text-negative",
   neutral: "border-line bg-surface-sunken text-ink-muted",
 };

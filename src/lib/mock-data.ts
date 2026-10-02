@@ -176,6 +176,8 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const DATE_RANGE_OPTIONS: { value: DateRange; label: string; days: number }[] = [
+  { value: "D", label: "Daily", days: 7 },
+  { value: "W", label: "Weekly", days: 28 },
   { value: "1M", label: "1 Month", days: 30 },
   { value: "3M", label: "3 Months", days: 91 },
   { value: "6M", label: "6 Months", days: 182 },

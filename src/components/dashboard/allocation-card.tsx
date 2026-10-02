@@ -28,8 +28,8 @@ export function AllocationCard() {
         <AllocationBarChart data={slices} currency={currency} />
       </div>
 
-      <div className="mt-auto border-t border-line-soft px-4 py-2.5">
-        <p className="eyebrow">Largest Position</p>
+      <div className="mt-auto border-t border-line-soft bg-gold-soft/40 px-4 py-2.5">
+        <p className="eyebrow text-gold">Largest Position</p>
         <div className="mt-1.5 flex items-center gap-2">
           <span className="size-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: largest.color }} aria-hidden />
           <span className="truncate text-[12.5px] font-semibold tracking-tight text-ink">
@@ -38,7 +38,7 @@ export function AllocationCard() {
           <span className="numeric text-[11px] font-medium text-ink-muted">
             {largest.percentage.toFixed(1)}%
           </span>
-          <span className="numeric ml-auto text-[12.5px] font-semibold tracking-tight text-ink">
+          <span className="numeric ml-auto text-[12.5px] font-semibold tracking-tight text-gold-deep">
             {money(largest.value)}
           </span>
         </div>
