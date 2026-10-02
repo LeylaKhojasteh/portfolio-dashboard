@@ -16,7 +16,7 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
   const maxPercentage = Math.max(...data.map((slice) => slice.percentage));
 
   return (
-    <div className="h-[228px] w-full overflow-hidden">
+    <div className="h-[204px] w-full overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}

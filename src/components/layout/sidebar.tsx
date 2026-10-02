@@ -95,11 +95,11 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
                 aria-current={isActive ? "page" : undefined}
                 title={collapsed ? item.label : undefined}
                 className={cx(
-                  "group relative mb-0.5 flex h-8 items-center rounded-lg text-[12.5px] transition-colors duration-200",
+                  "group relative mb-0.5 flex h-[34px] items-center rounded-lg text-[12.5px] transition-colors duration-200",
                   collapsed ? "w-full justify-center" : "w-full gap-2.5 pl-2.5 pr-2",
                   isActive
-                    ? "bg-accent-soft font-medium text-accent-deep"
-                    : "font-medium text-ink-muted hover:bg-accent-soft/45 hover:text-ink-soft",
+                    ? "bg-accent-deep font-semibold text-canvas shadow-raised"
+                    : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-ink",
                 )}
               >
                 {isActive ? (
@@ -110,10 +110,10 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
                 ) : null}
                 <Icon
                   className={cx(
-                    "size-4 shrink-0 transition-colors duration-200",
-                    isActive ? "text-accent-deep" : "text-ink-faint group-hover:text-accent",
+                    "size-[17px] shrink-0 transition-colors duration-200",
+                    isActive ? "text-canvas" : "text-ink-faint group-hover:text-accent",
                   )}
-                  strokeWidth={isActive ? 2.1 : 1.8}
+                  strokeWidth={isActive ? 2.2 : 1.8}
                 />
                 <span
                   className={cx(

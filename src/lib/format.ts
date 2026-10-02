@@ -1,7 +1,7 @@
 import type { Currency, TrendDirection } from "@/types";
 
-/** Mock USD → Toman reference rate used for every conversion in the prototype. */
-export const USD_TO_TOMAN = 103_450;
+/** Mock USD → Toman reference rate. Deliberately round: this build is demo data. */
+export const USD_TO_TOMAN = 100_000;
 
 export const CURRENCY_SYMBOL: Record<Currency, string> = {
   USD: "$",

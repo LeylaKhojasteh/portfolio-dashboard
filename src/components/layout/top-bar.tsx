@@ -115,10 +115,6 @@ export function TopBar({
               />
             </button>
           </div>
-
-          <span className="flex size-8 items-center justify-center rounded-full border border-accent-line bg-gradient-to-b from-accent-soft to-surface text-[10px] font-semibold tracking-tight text-accent-deep shadow-raised">
-            RA
-          </span>
         </div>
       </div>
     </header>

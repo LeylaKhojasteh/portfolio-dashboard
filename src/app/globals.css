@@ -1,61 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces — warm cream / parchment, never bright white */
-  --color-canvas: #efeae1;
-  --color-canvas-deep: #e6e0d4;
-  --color-surface: #fbf8f2;
-  --color-surface-muted: #f7f3ea;
-  --color-surface-sunken: #efe9dd;
-  --color-surface-hover: #f2ede2;
+  /* Surfaces — one warm sheet. Cards sit only a shade above the page. */
+  --color-canvas: #ece5d8;
+  --color-canvas-deep: #e3dacb;
+  --color-surface: #f8f4ec;
+  --color-surface-muted: #f5f0e6;
+  --color-surface-sunken: #ede6d9;
+  --color-surface-hover: #f1ebdf;
 
   /* Ink — dark warm grey, never pure black */
-  --color-ink: #211e19;
-  --color-ink-soft: #46403a;
-  --color-ink-muted: #7b7368;
-  --color-ink-faint: #a19889;
+  --color-ink: #241f19;
+  --color-ink-soft: #48413a;
+  --color-ink-muted: #7a7166;
+  --color-ink-faint: #9e9484;
 
-  /* Lines — deliberately darker so cards read as separate sheets */
-  --color-line: #ded5c4;
-  --color-line-soft: #eae2d3;
-  --color-line-strong: #c9bda6;
+  /* Lines — warm and deep enough to divide panels without floating them */
+  --color-line: #d9cdb6;
+  --color-line-soft: #e6dcc8;
+  --color-line-strong: #c6b89c;
 
   /* Primary accent — muted green: navigation, selection, positive figures */
   --color-accent: #3f6b4d;
-  --color-accent-deep: #30553e;
-  --color-accent-soft: #e7efe7;
-  --color-accent-line: #c1d4c4;
+  --color-accent-deep: #2d5339;
+  --color-accent-soft: #e4ecdf;
+  --color-accent-line: #bfd0b6;
   --color-accent-ring: rgb(63 107 77 / 0.14);
 
   /* Secondary accent — warm gold / earth brown: allocation, secondary marks */
-  --color-gold: #94743c;
-  --color-gold-deep: #7a5f2f;
-  --color-gold-soft: #f4ecdb;
-  --color-gold-line: #e2d2b0;
+  --color-gold: #8f6f35;
+  --color-gold-deep: #74592a;
+  --color-gold-soft: #f1e8d4;
+  --color-gold-line: #ddcba4;
 
   /* Semantics — muted, institutional */
   --color-positive: #3f6b4d;
-  --color-positive-soft: #e7efe7;
-  --color-positive-line: #c1d4c4;
-  --color-negative: #9c4a41;
-  --color-negative-soft: #f5e8e5;
-  --color-negative-line: #e5cac7;
-  --color-info: #4b6079;
-  --color-info-soft: #e7ebf1;
-  --color-info-line: #ccd7e3;
-  --color-violet: #5b5a7d;
-  --color-violet-soft: #e9e9f1;
-  --color-violet-line: #d0d0e0;
+  --color-positive-soft: #e4ecdf;
+  --color-positive-line: #bfd0b6;
+  --color-negative: #9a463c;
+  --color-negative-soft: #f3e4e0;
+  --color-negative-line: #e0c2bd;
+  --color-info: #48607c;
+  --color-info-soft: #e4e9ef;
+  --color-info-line: #c6d1de;
+  --color-violet: #585777;
+  --color-violet-soft: #e6e5ee;
+  --color-violet-line: #cbc9dd;
 
   /* Typography */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* Shadows — warm, layered, and firm enough to separate stacked cards */
-  --shadow-card: 0 1px 1px rgb(33 30 25 / 0.04), 0 6px 16px -10px rgb(33 30 25 / 0.16);
-  --shadow-card-hover: 0 1px 2px rgb(33 30 25 / 0.05), 0 14px 28px -14px rgb(33 30 25 / 0.24);
-  --shadow-raised: 0 1px 1px rgb(33 30 25 / 0.05), 0 3px 8px -5px rgb(33 30 25 / 0.18);
-  --shadow-pop: 0 16px 40px -12px rgb(33 30 25 / 0.28), 0 2px 6px -2px rgb(33 30 25 / 0.1);
+  /* Shadows — shallow. Panels should read as divisions on one sheet, not floating cards. */
+  --shadow-card: 0 1px 0 rgb(36 31 25 / 0.02), 0 1px 2px rgb(36 31 25 / 0.05);
+  --shadow-card-hover: 0 1px 0 rgb(36 31 25 / 0.02), 0 6px 16px -10px rgb(36 31 25 / 0.18);
+  --shadow-raised: 0 1px 0 rgb(36 31 25 / 0.03), 0 1px 2px rgb(36 31 25 / 0.07);
+  --shadow-pop: 0 14px 36px -12px rgb(36 31 25 / 0.28), 0 2px 6px -2px rgb(36 31 25 / 0.1);
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -91,11 +91,11 @@
     background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    /* A soft warm bloom at the top so the canvas reads as parchment, not paper. */
+    /* One warm sheet: the bloom is subtle so the canvas never reads as flat paper. */
     background-image: radial-gradient(
       120% 88% at 50% -18%,
-      rgb(251 248 242 / 0.9) 0%,
-      rgb(239 234 225 / 0) 64%
+      rgb(248 244 236 / 0.7) 0%,
+      rgb(236 229 216 / 0) 66%
     );
   }
 

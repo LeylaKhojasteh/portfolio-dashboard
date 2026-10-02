@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { SegmentedOption } from "@/types";
 import { cx } from "@/lib/cx";
 
@@ -13,7 +14,11 @@ interface SegmentedControlProps<T extends string> {
   className?: string;
 }
 
-/** Pill-style segmented control with a single sliding indicator. */
+/**
+ * Pill-style segmented control. The sliding indicator is measured from the
+ * active button rather than dividing the track, so each pill hugs its own
+ * label instead of stretching to an equal share.
+ */
 export function SegmentedControl<T extends string>({
   ariaLabel,
   options,
@@ -22,38 +27,60 @@ export function SegmentedControl<T extends string>({
   compactLabels,
   className,
 }: SegmentedControlProps<T>) {
-  const activeIndex = Math.max(
-    options.findIndex((option) => option.value === value),
-    0,
-  );
-  const segmentWidth = `calc((100% - 0.5rem) / ${options.length})`;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const active = buttonRefs.current[options.findIndex((option) => option.value === value)];
+    if (!container || !active) return;
+    setIndicator({
+      left: active.offsetLeft,
+      width: active.offsetWidth,
+    });
+  }, [value, options]);
+
+  useEffect(() => {
+    function onResize() {
+      const active = buttonRefs.current[options.findIndex((option) => option.value === value)];
+      if (!active) return;
+      setIndicator({ left: active.offsetLeft, width: active.offsetWidth });
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [value, options]);
 
   return (
     <div
+      ref={containerRef}
       role="radiogroup"
       aria-label={ariaLabel}
       className={cx(
-        "relative inline-flex rounded-lg border border-line bg-surface-sunken p-1 shadow-[inset_0_1px_2px_rgb(31_29_26/0.04)]",
+        "relative inline-flex h-8 items-center rounded-lg border border-line bg-surface-sunken p-1 shadow-[inset_0_1px_2px_rgb(36_31_25/0.04)]",
         className,
       )}
     >
       <span
         aria-hidden
-        className="absolute top-1 bottom-1 left-1 rounded-md border border-accent-line bg-surface shadow-raised transition-transform duration-300 ease-out-soft"
-        style={{ width: segmentWidth, transform: `translateX(${activeIndex * 100}%)` }}
+        className="absolute top-1 bottom-1 rounded-md border border-accent-line bg-surface shadow-raised transition-all duration-300 ease-out-soft"
+        style={{ left: indicator.left, width: indicator.width }}
       />
-      {options.map((option) => {
+      {options.map((option, index) => {
         const isActive = option.value === value;
         return (
           <button
             key={option.value}
+            ref={(node) => {
+              buttonRefs.current[index] = node;
+            }}
             type="button"
             role="radio"
             aria-checked={isActive}
             onClick={() => onChange(option.value)}
             className={cx(
-              "relative z-10 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-colors duration-200",
-              isActive ? "text-accent-deep" : "text-ink-muted hover:text-ink-soft",
+              "relative z-10 flex cursor-pointer items-center rounded-md px-2.5 text-[11px] font-medium whitespace-nowrap transition-colors duration-200",
+              isActive ? "font-semibold text-accent-deep" : "text-ink-muted hover:text-ink",
             )}
           >
             <span className="hidden sm:inline">{option.label}</span>

@@ -17,7 +17,7 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
   const total = currency === "USD" ? totalUsd : toToman(totalUsd);
 
   return (
-    <div className="relative mx-auto h-[156px] w-full max-w-[248px] overflow-hidden">
+    <div className="relative mx-auto h-[136px] w-full max-w-[248px] overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Tooltip content={<AllocationTooltip currency={currency} />} />
@@ -25,11 +25,11 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
             data={data}
             dataKey="percentage"
             nameKey="label"
-            innerRadius="66%"
-            outerRadius="94%"
-            paddingAngle={2.5}
+            innerRadius="68%"
+            outerRadius="96%"
+            paddingAngle={1.5}
             stroke={CHART_TOKENS.tooltipSurface}
-            strokeWidth={2}
+            strokeWidth={1}
             animationDuration={750}
           >
             {data.map((slice) => (
@@ -38,9 +38,6 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
           </Pie>
         </PieChart>
       </ResponsiveContainer>
-
-      {/* Secondary accent: a thin gold ring frames the primary green figures. */}
-      <div className="pointer-events-none absolute inset-x-[18%] top-1/2 h-[62%] -translate-y-1/2 rounded-full border border-gold-soft" />
 
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-10 text-center">
         <span className="eyebrow text-gold">Total Value</span>

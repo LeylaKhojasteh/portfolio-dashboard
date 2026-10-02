@@ -36,8 +36,8 @@ export function PerformanceCard() {
         subtitle={`Value over the selected ${dateRange === "1Y" ? "year" : "period"}`}
         action={
           <div className="flex flex-col items-end">
-            <p className="eyebrow">Current Value</p>
-            <p className="numeric mt-1 flex items-baseline gap-2 text-[1.15rem] leading-none font-semibold tracking-tight text-ink">
+            <p className="eyebrow text-gold">Portfolio Value</p>
+            <p className="numeric mt-1 flex items-baseline gap-2 text-[1.15rem] leading-none font-semibold tracking-tight text-gold-deep">
               {money(last)}
               <TrendValue value={changePercent} />
             </p>

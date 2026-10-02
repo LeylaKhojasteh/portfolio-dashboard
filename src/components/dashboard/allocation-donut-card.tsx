@@ -28,7 +28,7 @@ export function AllocationDonutCard() {
       </div>
 
       <div className="mt-auto">
-        <div className="grid grid-cols-[1fr_52px_80px] items-center gap-2 border-t border-line-soft px-4 py-1.5">
+        <div className="grid grid-cols-[1fr_48px_76px] items-center gap-2 border-t border-line-soft px-4 py-1">
           <span className="th-eyebrow">Asset</span>
           <span className="th-eyebrow text-right">Weight</span>
           <span className="th-eyebrow text-right">Value</span>
@@ -37,7 +37,7 @@ export function AllocationDonutCard() {
           {slices.map((slice) => (
             <li
               key={slice.id}
-              className="grid grid-cols-[1fr_52px_80px] items-center gap-2 px-4 py-1.5 transition-colors hover:bg-accent-soft/50"
+              className="grid grid-cols-[1fr_48px_76px] items-center gap-2 px-4 py-1 transition-colors hover:bg-accent-soft/50"
             >
               <span className="flex min-w-0 items-center gap-2">
                 <span
@@ -45,12 +45,12 @@ export function AllocationDonutCard() {
                   style={{ backgroundColor: slice.color }}
                   aria-hidden
                 />
-                <span className="truncate text-[11.5px] font-medium tracking-tight text-ink">{slice.label}</span>
+                <span className="truncate text-[11px] font-medium tracking-tight text-ink">{slice.label}</span>
               </span>
-              <span className="numeric text-right text-[11.5px] text-ink-muted">
+              <span className="numeric text-right text-[11px] text-ink-muted">
                 {formatNumber(slice.percentage, { digits: 1 })}%
               </span>
-              <span className="numeric text-right text-[11.5px] font-semibold tracking-tight text-ink">
+              <span className="numeric text-right text-[11px] font-semibold tracking-tight text-ink">
                 {money(slice.value)}
               </span>
             </li>

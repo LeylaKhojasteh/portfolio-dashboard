@@ -10,22 +10,11 @@ import type {
   Transaction,
 } from "@/types";
 import { ASSET_PALETTE, type PaletteKey } from "@/lib/chart-theme";
-import { formatNumber, formatQuantity, toToman, toUsd, USD_TO_TOMAN } from "@/lib/format";
+import { formatNumber, formatQuantity, toToman, toUsd } from "@/lib/format";
 
 /* -------------------------------------------------------------------------- */
-/* Deterministic pseudo-random helpers                                        */
+/* Deterministic demo series                                                   */
 /* -------------------------------------------------------------------------- */
-
-/** mulberry32 — a tiny seeded PRNG so server and client render identical data. */
-function seededRandom(seed: number): () => number {
-  let state = seed;
-  return () => {
-    state = (state + 0x6d2b79f5) | 0;
-    let t = Math.imul(state ^ (state >>> 15), 1 | state);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 const HISTORY_DAYS = 365;
 const ANCHOR_DATE = new Date("2026-09-30T00:00:00Z");
@@ -38,23 +27,72 @@ function isoDaysAgo(days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
-/**
- * Geometric random walk on log prices, rescaled so the series ends exactly on
- * `end`. Gives believable, reproducible market shapes without shipping fixtures.
- */
-function buildSeries(start: number, end: number, days: number, volatility: number, seed: number): number[] {
-  const random = seededRandom(seed);
-  const drift = Math.log(end / start) / days;
-  const values: number[] = [];
-  let logValue = Math.log(start);
+/** Month ends, oldest first, used as exact anchors for the demo curves. */
+const MONTH_ENDS = [
+  "2025-10-31",
+  "2025-11-30",
+  "2025-12-31",
+  "2026-01-31",
+  "2026-02-28",
+  "2026-03-31",
+  "2026-04-30",
+  "2026-05-31",
+  "2026-06-30",
+  "2026-07-31",
+  "2026-08-31",
+  "2026-09-30",
+];
 
-  for (let day = 0; day < days; day += 1) {
-    logValue += drift + (random() - 0.5) * 2 * volatility;
-    values.push(Math.exp(logValue));
+function dayIndexOf(iso: string): number {
+  const target = new Date(`${iso}T00:00:00Z`).getTime();
+  return Math.round((ANCHOR_DATE.getTime() - target) / 86_400_000);
+}
+
+/**
+ * Linear interpolation between round month-end landmarks, with a small smooth
+ * ripple between them. Every landmark is hit exactly, so the headline figures
+ * stay round, obviously-fake numbers instead of drifting into realism.
+ */
+function buildDemoSeries(landmarks: number[], ripple: number): number[] {
+  const byIndex = landmarks.map((value, order) => ({
+    index: dayIndexOf(MONTH_ENDS[order]),
+    value,
+  }));
+
+  const series: number[] = new Array(HISTORY_DAYS + 1).fill(0);
+
+  for (let segment = 0; segment < byIndex.length - 1; segment += 1) {
+    const from = byIndex[segment];
+    const to = byIndex[segment + 1];
+    const span = from.index - to.index;
+
+    for (let offset = 0; offset <= span; offset += 1) {
+      const index = to.index + offset;
+
+      if (offset === 0) {
+        series[index] = to.value;
+      } else if (offset === span) {
+        series[index] = from.value;
+      } else {
+        const progress = offset / span;
+        const wave = Math.sin((segment * 7 + offset) * 0.55) * ripple;
+        series[index] = from.value + (to.value - from.value) * progress + from.value * wave;
+      }
+    }
   }
 
-  const scale = end / values[values.length - 1];
-  return values.map((value) => value * scale);
+  // `series` is indexed by days-ago (newest first); the app expects oldest first.
+  return series.slice(0, HISTORY_DAYS).reverse();
+}
+
+/** Short intraday curve used by the KPI sparklines; linear with a light ripple. */
+function buildSeries(start: number, end: number, points: number, ripple: number, seed: number): number[] {
+  return Array.from({ length: points }, (_, index) => {
+    const progress = index / (points - 1);
+    const wave = Math.sin((seed + index) * 0.7) * ripple;
+    const value = start + (end - start) * progress + start * wave;
+    return index === points - 1 ? end : value;
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -71,14 +109,18 @@ interface AssetSeed {
   change24h: number;
 }
 
+/**
+ * Demo holdings only. Prices and quantities are deliberately round so every
+ * figure on screen is unmistakably sample data rather than a real portfolio.
+ */
 const ASSET_SEEDS: AssetSeed[] = [
-  { id: "btc", name: "Bitcoin", symbol: "BTC", quantity: 4.221, nativePrice: 104_850, nativeCurrency: "USD", change24h: 1.84 },
-  { id: "eth", name: "Ethereum", symbol: "ETH", quantity: 71.06, nativePrice: 3_942, nativeCurrency: "USD", change24h: 2.41 },
-  { id: "tao", name: "Bittensor", symbol: "TAO", quantity: 386.5, nativePrice: 412.4, nativeCurrency: "USD", change24h: -1.27 },
-  { id: "ton", name: "Toncoin", symbol: "TON", quantity: 35_640, nativePrice: 320_000, nativeCurrency: "TOMAN", change24h: 0.94 },
-  { id: "sui", name: "Sui", symbol: "SUI", quantity: 29_670, nativePrice: 3.418, nativeCurrency: "USD", change24h: -0.62 },
-  { id: "stocks", name: "Bourse Stocks", symbol: "STK", quantity: 3_128, nativePrice: 4_158_000, nativeCurrency: "TOMAN", change24h: 0.31 },
-  { id: "gold", name: "Gold Mesghal", symbol: "GLD", quantity: 2_140, nativePrice: 1_248_000, nativeCurrency: "TOMAN", change24h: -0.18 },
+  { id: "btc", name: "Bitcoin", symbol: "BTC", quantity: 0.2, nativePrice: 2_000, nativeCurrency: "USD", change24h: 2 },
+  { id: "eth", name: "Ethereum", symbol: "ETH", quantity: 2, nativePrice: 100, nativeCurrency: "USD", change24h: 1.5 },
+  { id: "tao", name: "Bittensor", symbol: "TAO", quantity: 5, nativePrice: 20, nativeCurrency: "USD", change24h: -1 },
+  { id: "ton", name: "Toncoin", symbol: "TON", quantity: 10, nativePrice: 1_000_000, nativeCurrency: "TOMAN", change24h: 0.8 },
+  { id: "sui", name: "Sui", symbol: "SUI", quantity: 2, nativePrice: 50, nativeCurrency: "USD", change24h: -0.5 },
+  { id: "stocks", name: "Bourse Stocks", symbol: "STK", quantity: 2, nativePrice: 2_500_000, nativeCurrency: "TOMAN", change24h: 0.4 },
+  { id: "gold", name: "Gold Mesghal", symbol: "GLD", quantity: 5, nativePrice: 1_000_000, nativeCurrency: "TOMAN", change24h: -0.2 },
 ];
 
 function nativeToUsd(value: number, currency: Currency): number {
@@ -93,7 +135,7 @@ const ASSET_USD_VALUES = ASSET_SEEDS.map((seed) => nativeToUsd(seed.quantity * s
 
 export const PORTFOLIO_TOTAL_USD = ASSET_USD_VALUES.reduce((total, value) => total + value, 0);
 export const PORTFOLIO_TOTAL_TOMAN = usdToNative(PORTFOLIO_TOTAL_USD, "TOMAN");
-export const COST_BASIS_USD = 1_024_300;
+export const COST_BASIS_USD = 800;
 
 export const ASSETS: Asset[] = ASSET_SEEDS.map((seed, index) => {
   const value = ASSET_USD_VALUES[index];
@@ -132,14 +174,21 @@ export const ALLOCATION: AllocationSlice[] = ASSETS.map((asset) => ({
 /* Market series                                                              */
 /* -------------------------------------------------------------------------- */
 
-const rawPortfolio = buildSeries(958_000, PORTFOLIO_TOTAL_USD, HISTORY_DAYS, 0.0105, 20_260_930);
-const btcPrices = buildSeries(84_200, 104_850, HISTORY_DAYS, 0.021, 7_104_85);
-const rateSeries = buildSeries(104_800, USD_TO_TOMAN, HISTORY_DAYS, 0.0022, 512_118);
+/** Month-end landmarks: the portfolio rises from $500 to exactly $1,000. */
+const PORTFOLIO_LANDMARKS = [500, 520, 560, 540, 600, 650, 620, 700, 760, 720, 800, 1_000];
+const BTC_LANDMARKS = [1_200, 1_250, 1_300, 1_280, 1_350, 1_450, 1_400, 1_500, 1_600, 1_550, 1_700, 2_000];
+const RATE_LANDMARKS = [
+  102_000, 101_800, 101_500, 101_600, 101_200, 100_900, 101_000, 100_700, 100_500, 100_600, 100_200, 100_000,
+];
+
+const rawPortfolio = buildDemoSeries(PORTFOLIO_LANDMARKS, 0.012);
+const btcPrices = buildDemoSeries(BTC_LANDMARKS, 0.016);
+const rateSeries = buildDemoSeries(RATE_LANDMARKS, 0.0012);
 
 export const PORTFOLIO_SERIES: PortfolioPoint[] = rawPortfolio.map((value, index) => ({
   date: isoDaysAgo(HISTORY_DAYS - 1 - index),
   value,
-  netFlow: index % 23 === 0 ? 4_500 + (index % 5) * 1_200 : index % 17 === 0 ? -3_200 : 0,
+  netFlow: index % 23 === 0 ? 200 : index % 17 === 0 ? -100 : 0,
 }));
 
 export const BTC_SERIES = btcPrices;
@@ -149,17 +198,18 @@ export const RATE_SERIES = rateSeries;
 /* Transactions                                                               */
 /* -------------------------------------------------------------------------- */
 
+/** Demo ledger — round amounts only, ordered newest first. */
 export const TRANSACTIONS: Transaction[] = [
-  { id: "tx-01", date: "2026-09-28", type: "BUY", asset: "Bitcoin", symbol: "BTC", amount: 0.128, value: 13_421 },
-  { id: "tx-02", date: "2026-09-26", type: "SELL", asset: "Ethereum", symbol: "ETH", amount: 4.5, value: 17_739 },
-  { id: "tx-03", date: "2026-09-24", type: "TRANSFER", asset: "Toncoin", symbol: "TON", amount: 1_200, value: 3_723 },
-  { id: "tx-04", date: "2026-09-21", type: "DEPOSIT", asset: "Cash Balance", symbol: "USD", amount: 25_000, value: 25_000 },
-  { id: "tx-05", date: "2026-09-19", type: "BUY", asset: "Bittensor", symbol: "TAO", amount: 62.5, value: 25_775 },
-  { id: "tx-06", date: "2026-09-17", type: "WITHDRAW", asset: "Cash Balance", symbol: "USD", amount: 8_000, value: 8_000 },
-  { id: "tx-07", date: "2026-09-14", type: "BUY", asset: "Sui", symbol: "SUI", amount: 4_800, value: 16_406 },
-  { id: "tx-08", date: "2026-09-11", type: "SELL", asset: "Bitcoin", symbol: "BTC", amount: 0.045, value: 4_718 },
-  { id: "tx-09", date: "2026-09-08", type: "TRANSFER", asset: "Gold Mesghal", symbol: "GLD", amount: 120, value: 14_847 },
-  { id: "tx-10", date: "2026-09-04", type: "DEPOSIT", asset: "Cash Balance", symbol: "USD", amount: 18_500, value: 18_500 },
+  { id: "tx-01", date: "2026-09-28", type: "BUY", asset: "Bitcoin", symbol: "BTC", amount: 0.05, value: 100 },
+  { id: "tx-02", date: "2026-09-26", type: "SELL", asset: "Ethereum", symbol: "ETH", amount: 1, value: 100 },
+  { id: "tx-03", date: "2026-09-24", type: "TRANSFER", asset: "Toncoin", symbol: "TON", amount: 500, value: 50 },
+  { id: "tx-04", date: "2026-09-21", type: "DEPOSIT", asset: "Cash Balance", symbol: "USD", amount: 200, value: 200 },
+  { id: "tx-05", date: "2026-09-19", type: "BUY", asset: "Bittensor", symbol: "TAO", amount: 5, value: 100 },
+  { id: "tx-06", date: "2026-09-17", type: "WITHDRAW", asset: "Cash Balance", symbol: "USD", amount: 100, value: 100 },
+  { id: "tx-07", date: "2026-09-14", type: "BUY", asset: "Sui", symbol: "SUI", amount: 2, value: 100 },
+  { id: "tx-08", date: "2026-09-11", type: "SELL", asset: "Bitcoin", symbol: "BTC", amount: 0.02, value: 40 },
+  { id: "tx-09", date: "2026-09-08", type: "TRANSFER", asset: "Gold Mesghal", symbol: "GLD", amount: 5, value: 50 },
+  { id: "tx-10", date: "2026-09-04", type: "DEPOSIT", asset: "Cash Balance", symbol: "USD", amount: 300, value: 300 },
 ];
 
 /* -------------------------------------------------------------------------- */
