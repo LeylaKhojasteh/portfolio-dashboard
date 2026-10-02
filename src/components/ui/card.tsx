@@ -27,20 +27,20 @@ export function CardHeader({ title, subtitle, icon, action, divided, className }
   return (
     <header
       className={cx(
-        "flex items-start justify-between gap-4 px-5 pt-4 pb-3.5",
+        "flex items-start justify-between gap-4 px-4 pt-3 pb-2.5",
         divided && "border-b border-line-soft",
         className,
       )}
     >
-      <div className="flex min-w-0 items-start gap-2.5">
+      <div className="flex min-w-0 items-start gap-2">
         {icon ? (
-          <span className="mt-px flex size-7 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-sunken text-ink-muted">
+          <span className="mt-px flex size-6 shrink-0 items-center justify-center rounded-md border border-line bg-surface-sunken text-ink-muted">
             {icon}
           </span>
         ) : null}
         <div className="min-w-0">
-          <h2 className="truncate text-[13.5px] leading-tight font-semibold tracking-tight text-ink">{title}</h2>
-          {subtitle ? <p className="mt-1 truncate text-[11.5px] text-ink-muted">{subtitle}</p> : null}
+          <h2 className="truncate text-[13px] leading-tight font-semibold tracking-tight text-ink">{title}</h2>
+          {subtitle ? <p className="mt-0.5 truncate text-[11px] text-ink-muted">{subtitle}</p> : null}
         </div>
       </div>
       {action ? <div className="flex shrink-0 items-center gap-2">{action}</div> : null}
@@ -49,5 +49,5 @@ export function CardHeader({ title, subtitle, icon, action, divided, className }
 }
 
 export function CardBody({ className, children }: CardProps) {
-  return <div className={cx("px-5 pb-5", className)}>{children}</div>;
+  return <div className={cx("px-4 pb-4", className)}>{children}</div>;
 }

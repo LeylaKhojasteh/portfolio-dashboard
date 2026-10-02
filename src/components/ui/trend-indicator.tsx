@@ -30,11 +30,11 @@ export function TrendIndicator({ value, label, tone, digits = 2, className }: Tr
     <div className={cx("flex items-center gap-2", className)}>
       <span
         className={cx(
-          "numeric inline-flex items-center gap-1 rounded-[5px] border px-1.5 py-[3px] text-[11px] leading-none font-semibold",
+          "numeric inline-flex items-center gap-1 rounded-[4px] border px-1.5 py-[2px] text-[10.5px] leading-none font-semibold",
           TONE_STYLES[tone ?? autoTone],
         )}
       >
-        <Icon className="size-3" strokeWidth={2.2} aria-hidden />
+        <Icon className="size-2.5" strokeWidth={2.4} aria-hidden />
         {`${sign}${formatNumber(Math.abs(value), { digits })}%`}
       </span>
       {label ? <span className="truncate text-[11px] text-ink-faint">{label}</span> : null}
@@ -49,7 +49,7 @@ export function TrendValue({ value, digits = 2 }: { value: number; digits?: numb
   return (
     <span
       className={cx(
-        "numeric text-[12px] font-semibold",
+        "numeric text-[11.5px] font-semibold",
         direction === "up" && "text-positive",
         direction === "down" && "text-negative",
         direction === "flat" && "text-ink-muted",

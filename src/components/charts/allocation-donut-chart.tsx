@@ -17,7 +17,7 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
   const total = currency === "USD" ? totalUsd : toToman(totalUsd);
 
   return (
-    <div className="relative mx-auto h-[238px] w-full max-w-[288px] overflow-hidden">
+    <div className="relative mx-auto h-[172px] w-full max-w-[248px] overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Tooltip content={<AllocationTooltip currency={currency} />} />
@@ -39,12 +39,12 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
         </PieChart>
       </ResponsiveContainer>
 
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
-        <span className="text-[9.5px] font-semibold tracking-[0.14em] text-ink-faint uppercase">Total Value</span>
-        <span className="numeric mt-1.5 text-[1.05rem] leading-tight font-semibold tracking-tight text-ink">
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-10 text-center">
+        <span className="eyebrow">Total Value</span>
+        <span className="numeric mt-1 text-[0.95rem] leading-tight font-semibold tracking-tight text-ink">
           {formatMoney(total, currency, { compact: currency === "TOMAN" })}
         </span>
-        <span className="mt-1 text-[11px] text-ink-muted">{data.length} asset classes</span>
+        <span className="mt-0.5 text-[10.5px] text-ink-muted">{data.length} asset classes</span>
       </div>
     </div>
   );

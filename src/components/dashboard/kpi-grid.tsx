@@ -11,7 +11,7 @@ export function KpiGrid() {
   const cards = useMemo(() => getKpiCards(currency, dateRange), [currency, dateRange]);
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 xl:grid-cols-6">
+    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {cards.map((card) => (
         <KpiCard key={card.id} card={card} />
       ))}

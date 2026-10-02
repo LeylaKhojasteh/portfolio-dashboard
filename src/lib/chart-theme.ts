@@ -35,8 +35,9 @@ export const CHART_TOKENS = {
   grid: "#e6e0d4",
   axis: "#a39b8e",
   axisStrong: "#7a736a",
-  line: "#8a6d3b",
-  lineSoft: "#b08f5c",
+  /* Deep muted green — the chart's single emphasis colour, matching the accent. */
+  line: "#3d6b4c",
+  lineSoft: "#7ea286",
   average: "#a39b8e",
   positive: "#3d6b4c",
   negative: "#a04b42",

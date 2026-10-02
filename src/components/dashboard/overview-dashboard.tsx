@@ -15,7 +15,7 @@ export function OverviewDashboard() {
     <>
       <KpiGrid />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
         <div className="min-w-0 xl:col-span-8">
           <PerformanceCard />
         </div>
@@ -24,7 +24,7 @@ export function OverviewDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
         <div className="min-w-0 xl:col-span-8">
           <TransactionsCard />
         </div>
@@ -33,7 +33,7 @@ export function OverviewDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
         <div className="min-w-0 xl:col-span-12">
           <AssetsCard />
         </div>

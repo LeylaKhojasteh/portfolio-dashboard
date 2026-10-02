@@ -54,8 +54,8 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             onDateRangeChange={setDateRange}
             onOpenMobileNav={() => setIsMobileNavOpen(true)}
           />
-          <main className="flex-1 px-4 py-4 sm:px-5 lg:px-6 lg:py-6 xl:px-7">
-            <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-4">{children}</div>
+          <main className="flex-1 px-3 py-3 sm:px-4 lg:px-5 lg:py-4">
+            <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-3">{children}</div>
           </main>
         </div>
       </div>

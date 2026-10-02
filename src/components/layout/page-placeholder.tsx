@@ -16,7 +16,7 @@ export function PagePlaceholder({ title, description }: PagePlaceholderProps) {
   const Icon: ComponentType<{ className?: string; strokeWidth?: number }> = Construction;
 
   return (
-    <Card className="items-center justify-center gap-6 px-6 py-16 text-center sm:py-24">
+    <Card className="items-center justify-center gap-5 px-6 py-12 text-center sm:py-16">
       <span className="flex size-12 items-center justify-center rounded-xl border border-accent-line bg-gradient-to-b from-surface to-accent-soft text-accent shadow-raised">
         <Icon className="size-5" strokeWidth={1.8} />
       </span>

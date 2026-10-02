@@ -33,13 +33,13 @@ export function SegmentedControl<T extends string>({
       role="radiogroup"
       aria-label={ariaLabel}
       className={cx(
-        "relative inline-flex rounded-lg border border-line bg-surface-sunken p-1 shadow-[inset_0_1px_2px_rgb(31_29_26/0.05)]",
+        "relative inline-flex rounded-lg border border-line bg-surface-sunken p-1 shadow-[inset_0_1px_2px_rgb(31_29_26/0.04)]",
         className,
       )}
     >
       <span
         aria-hidden
-        className="absolute top-1 bottom-1 left-1 rounded-md border border-line bg-surface shadow-raised transition-transform duration-300 ease-out-soft"
+        className="absolute top-1 bottom-1 left-1 rounded-md border border-accent-line bg-surface shadow-raised transition-transform duration-300 ease-out-soft"
         style={{ width: segmentWidth, transform: `translateX(${activeIndex * 100}%)` }}
       />
       {options.map((option) => {
@@ -52,8 +52,8 @@ export function SegmentedControl<T extends string>({
             aria-checked={isActive}
             onClick={() => onChange(option.value)}
             className={cx(
-              "relative z-10 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-semibold tracking-[0.06em] whitespace-nowrap uppercase transition-colors duration-200",
-              isActive ? "text-ink" : "text-ink-muted hover:text-ink-soft",
+              "relative z-10 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-colors duration-200",
+              isActive ? "text-accent-deep" : "text-ink-muted hover:text-ink-soft",
             )}
           >
             <span className="hidden sm:inline">{option.label}</span>

@@ -19,34 +19,29 @@ export function AllocationCard() {
   return (
     <Card className="h-full">
       <CardHeader
-        icon={<Layers className="size-[15px]" strokeWidth={1.8} />}
+        icon={<Layers className="size-[14px]" strokeWidth={1.8} />}
         title="Asset Allocation"
         subtitle="Weight of each asset class"
       />
 
-      <div className="px-2 pb-1">
+      <div className="px-2 pb-0.5">
         <AllocationBarChart data={slices} currency={currency} />
       </div>
 
-      <div className="mt-auto border-t border-line-soft px-5 py-4">
+      <div className="mt-auto border-t border-line-soft px-4 py-2.5">
         <p className="eyebrow">Largest Position</p>
-        <div className="mt-2.5 flex items-center gap-2.5">
+        <div className="mt-1.5 flex items-center gap-2">
           <span className="size-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: largest.color }} aria-hidden />
-          <span className="truncate text-[13px] font-semibold tracking-tight text-ink">
+          <span className="truncate text-[12.5px] font-semibold tracking-tight text-ink">
             {largestAsset?.name ?? largest.label}
           </span>
           <span className="numeric text-[11px] font-medium text-ink-muted">
             {largest.percentage.toFixed(1)}%
           </span>
-          <span className="numeric ml-auto text-[13px] font-semibold tracking-tight text-ink">
+          <span className="numeric ml-auto text-[12.5px] font-semibold tracking-tight text-ink">
             {money(largest.value)}
           </span>
         </div>
-        <p className="mt-2 text-[11px] leading-relaxed text-ink-muted">
-          {largest.label} is the dominant holding, accounting for{" "}
-          <span className="font-medium text-ink-soft">{largest.percentage.toFixed(1)}%</span> of net assets across{" "}
-          {slices.length} positions.
-        </p>
       </div>
     </Card>
   );

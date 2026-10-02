@@ -16,13 +16,13 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
   const maxPercentage = Math.max(...data.map((slice) => slice.percentage));
 
   return (
-    <div className="h-[358px] w-full overflow-hidden">
+    <div className="h-[248px] w-full overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 4, right: 54, bottom: 4, left: 0 }}
-          barCategoryGap="34%"
+          margin={{ top: 2, right: 50, bottom: 2, left: 0 }}
+          barCategoryGap="30%"
         >
           <XAxis type="number" hide domain={[0, maxPercentage * 1.15]} />
           <YAxis
@@ -39,10 +39,10 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
           />
           <Bar
             dataKey="percentage"
-            barSize={18}
-            radius={[6, 6, 6, 6]}
+            barSize={14}
+            radius={[5, 5, 5, 5]}
             animationDuration={650}
-            background={{ fill: CHART_TOKENS.track, radius: 6 }}
+            background={{ fill: CHART_TOKENS.track, radius: 5 }}
           >
             {data.map((slice) => (
               <Cell key={slice.id} fill={slice.color} />
