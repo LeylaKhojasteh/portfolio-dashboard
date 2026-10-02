@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Menu, RefreshCw } from "lucide-react";
-import type { Currency, DateRange, Language } from "@/types";
+import { Menu, RefreshCw } from "lucide-react";
+import type { Currency, DateRange } from "@/types";
 import { cx } from "@/lib/cx";
-import { CURRENCY_OPTIONS, DATE_RANGE_OPTIONS, SNAPSHOT_DATE } from "@/lib/mock-data";
-import { formatDate } from "@/lib/format";
+import { CURRENCY_OPTIONS, DATE_RANGE_OPTIONS, SNAPSHOT_DATE, SNAPSHOT_TIME } from "@/lib/mock-data";
+import { formatStamp } from "@/lib/format";
+import { LOCALES, LOCALE_LIST, type Locale } from "@/locales";
+import { useLocale, useTranslate } from "@/components/layout/locale-provider";
 import { Dropdown } from "@/components/ui/dropdown";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
-const LANGUAGE_OPTIONS: { value: Language; label: string }[] = [
-  { value: "EN", label: "EN" },
-  { value: "FA", label: "FA" },
-];
+const LANGUAGE_OPTIONS = LOCALE_LIST.map(({ value }) => ({ value, label: value }));
 
 interface TopBarProps {
   currency: Currency;
@@ -29,8 +28,14 @@ export function TopBar({
   onDateRangeChange,
   onOpenMobileNav,
 }: TopBarProps) {
-  const [language, setLanguage] = useState<Language>("EN");
+  const t = useTranslate();
+  const { locale, setLocale, numericIntl } = useLocale();
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const rangeOptions = DATE_RANGE_OPTIONS.map((option) => ({
+    value: option.value,
+    label: t(option.labelKey),
+  }));
 
   function handleRefresh() {
     setIsRefreshing(true);
@@ -45,25 +50,22 @@ export function TopBar({
           <button
             type="button"
             onClick={onOpenMobileNav}
-            aria-label="Open navigation"
-            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface text-ink-soft shadow-raised transition-colors hover:border-accent-line hover:text-accent-deep lg:hidden"
+            aria-label={t("nav.open")}
+            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface-sunken text-ink-soft transition-colors hover:text-ink lg:hidden"
           >
             <Menu className="size-4" strokeWidth={1.9} />
           </button>
-          <div className="min-w-0">
-            <h1 className="truncate text-[14px] leading-tight font-semibold tracking-tight text-ink">
-              Portfolio Dashboard
-            </h1>
-            <p className="truncate text-[10.5px] leading-tight text-ink-muted">Personal Finance OS</p>
-          </div>
+          <h1 className="truncate text-[14px] leading-tight font-semibold tracking-tight text-ink">
+            {t("topbar.title")}
+          </h1>
         </div>
 
         {/* Period filter */}
         <div className="order-last flex w-full items-center justify-start md:justify-center lg:order-none lg:w-auto">
           <Dropdown
-            ariaLabel="Time range"
-            label="Time Range"
-            options={DATE_RANGE_OPTIONS}
+            ariaLabel={t("range.label")}
+            label={t("range.label")}
+            options={rangeOptions}
             value={dateRange}
             onChange={onDateRangeChange}
           />
@@ -72,14 +74,15 @@ export function TopBar({
         {/* Display units + account utilities */}
         <div className="flex shrink-0 items-center justify-end gap-2 lg:flex-1">
           <SegmentedControl
-            ariaLabel="Interface language"
+            ariaLabel={t("topbar.language")}
             options={LANGUAGE_OPTIONS}
-            value={language}
-            onChange={setLanguage}
+            value={locale}
+            onChange={(value: Locale) => setLocale(value)}
+            titleFor={(value) => LOCALES[value].label}
           />
 
           <SegmentedControl
-            ariaLabel="Display currency"
+            ariaLabel={t("topbar.currency")}
             options={CURRENCY_OPTIONS}
             value={currency}
             onChange={onCurrencyChange}
@@ -87,34 +90,23 @@ export function TopBar({
 
           <div className="hidden h-5 w-px bg-line md:block" aria-hidden />
 
-          <span className="hidden items-center gap-1.5 text-[10.5px] whitespace-nowrap text-ink-faint xl:flex">
-            <span className="size-1.5 rounded-full bg-accent" aria-hidden />
-            Updated {formatDate(SNAPSHOT_DATE, "long")}
+          <span className="hidden items-center gap-1.5 text-[10.5px] whitespace-nowrap text-ink-muted xl:flex">
+            <span className="size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
+            {t("topbar.lastUpdate")}{" "}
+            <span className="numeric text-ink-soft">
+              {formatStamp(SNAPSHOT_DATE, SNAPSHOT_TIME, numericIntl)}
+            </span>
           </span>
 
-          <div className="hidden items-center gap-1 md:flex">
-            <button
-              type="button"
-              onClick={handleRefresh}
-              aria-label="Refresh data"
-              title="Refresh data"
-              className="flex size-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface text-ink-muted shadow-raised transition-colors hover:border-accent-line hover:text-accent-deep"
-            >
-              <RefreshCw className={cx("size-3.5", isRefreshing && "animate-spin")} strokeWidth={1.9} />
-            </button>
-            <button
-              type="button"
-              aria-label="Notifications"
-              title="Notifications"
-              className="relative flex size-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface text-ink-muted shadow-raised transition-colors hover:border-accent-line hover:text-accent-deep"
-            >
-              <Bell className="size-3.5" strokeWidth={1.9} />
-              <span
-                className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-gold ring-2 ring-surface"
-                aria-hidden
-              />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            aria-label={t("topbar.refresh")}
+            title={t("topbar.refresh")}
+            className="hidden size-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface-sunken text-ink-muted transition-colors hover:text-ink md:flex"
+          >
+            <RefreshCw className={cx("size-3.5", isRefreshing && "animate-spin")} strokeWidth={1.9} />
+          </button>
         </div>
       </div>
     </header>

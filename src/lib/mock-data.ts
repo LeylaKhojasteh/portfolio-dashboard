@@ -1,16 +1,16 @@
-import type {
+﻿import type {
   AllocationSlice,
   Asset,
   Currency,
   DateRange,
   KpiAccent,
   KpiCardData,
-  NavItem,
   PortfolioPoint,
   Transaction,
 } from "@/types";
+import type { TranslationKey } from "@/locales";
 import { ASSET_PALETTE, type PaletteKey } from "@/lib/chart-theme";
-import { formatNumber, formatQuantity, toToman, toUsd } from "@/lib/format";
+import { toToman, toUsd } from "@/lib/format";
 
 /* -------------------------------------------------------------------------- */
 /* Deterministic demo series                                                   */
@@ -20,6 +20,9 @@ const HISTORY_DAYS = 365;
 const ANCHOR_DATE = new Date("2026-09-30T00:00:00Z");
 
 export const SNAPSHOT_DATE = ANCHOR_DATE.toISOString().slice(0, 10);
+
+/** Clock time shown next to the snapshot date in the toolbar. */
+export const SNAPSHOT_TIME = "14:05";
 
 function isoDaysAgo(days: number): string {
   const date = new Date(ANCHOR_DATE);
@@ -131,7 +134,9 @@ function usdToNative(value: number, currency: Currency): number {
   return currency === "USD" ? value : toToman(value);
 }
 
-const ASSET_USD_VALUES = ASSET_SEEDS.map((seed) => nativeToUsd(seed.quantity * seed.nativePrice, seed.nativeCurrency));
+const ASSET_USD_VALUES = ASSET_SEEDS.map((seed) =>
+  nativeToUsd(seed.quantity * seed.nativePrice, seed.nativeCurrency),
+);
 
 export const PORTFOLIO_TOTAL_USD = ASSET_USD_VALUES.reduce((total, value) => total + value, 0);
 export const PORTFOLIO_TOTAL_TOMAN = usdToNative(PORTFOLIO_TOTAL_USD, "TOMAN");
@@ -198,7 +203,7 @@ export const RATE_SERIES = rateSeries;
 /* Transactions                                                               */
 /* -------------------------------------------------------------------------- */
 
-/** Demo ledger — round amounts only, ordered newest first. */
+/** Demo ledger with round amounts only, ordered newest first. */
 export const TRANSACTIONS: Transaction[] = [
   { id: "tx-01", date: "2026-09-28", type: "BUY", asset: "Bitcoin", symbol: "BTC", amount: 0.05, value: 100 },
   { id: "tx-02", date: "2026-09-26", type: "SELL", asset: "Ethereum", symbol: "ETH", amount: 1, value: 100 },
@@ -213,27 +218,25 @@ export const TRANSACTIONS: Transaction[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/* Navigation                                                                 */
+/* Toolbar options                                                            */
 /* -------------------------------------------------------------------------- */
 
-export const NAV_ITEMS: NavItem[] = [
-  { label: "Overview", href: "/", icon: "LayoutDashboard" },
-  { label: "Transactions", href: "/transactions", icon: "ArrowLeftRight", section: "Portfolio" },
-  { label: "Assets", href: "/assets", icon: "Wallet" },
-  { label: "Analytics", href: "/analytics", icon: "ChartNoAxesCombined" },
-  { label: "Settings", href: "/settings", icon: "Settings", section: "Workspace" },
-  { label: "Login", href: "/login", icon: "LogIn" },
+export interface DateRangeOption {
+  value: DateRange;
+  labelKey: TranslationKey;
+  days: number;
+}
+
+export const DATE_RANGE_OPTIONS: DateRangeOption[] = [
+  { value: "D", labelKey: "range.D", days: 7 },
+  { value: "W", labelKey: "range.W", days: 28 },
+  { value: "1M", labelKey: "range.1M", days: 30 },
+  { value: "3M", labelKey: "range.3M", days: 91 },
+  { value: "6M", labelKey: "range.6M", days: 182 },
+  { value: "1Y", labelKey: "range.1Y", days: HISTORY_DAYS },
 ];
 
-export const DATE_RANGE_OPTIONS: { value: DateRange; label: string; days: number }[] = [
-  { value: "D", label: "Daily", days: 7 },
-  { value: "W", label: "Weekly", days: 28 },
-  { value: "1M", label: "1 Month", days: 30 },
-  { value: "3M", label: "3 Months", days: 91 },
-  { value: "6M", label: "6 Months", days: 182 },
-  { value: "1Y", label: "1 Year", days: HISTORY_DAYS },
-];
-
+/** Currency labels stay identical in every locale by design. */
 export const CURRENCY_OPTIONS: { value: Currency; label: string }[] = [
   { value: "USD", label: "USD" },
   { value: "TOMAN", label: "TOMAN" },
@@ -246,11 +249,13 @@ export const CURRENCY_OPTIONS: { value: Currency; label: string }[] = [
 /** 30-day trailing growth of the portfolio, in percent. */
 const GROWTH_SERIES = PORTFOLIO_SERIES.map((point, index) => {
   if (index < 30) return 0;
-  return ((point.value / PORTFOLIO_SERIES[index - 30].value - 1) * 100);
+  return (point.value / PORTFOLIO_SERIES[index - 30].value - 1) * 100;
 });
 
 /** 30-day trailing change of the portfolio, in USD. */
-const PNL_SERIES = PORTFOLIO_SERIES.map((point, index) => (index < 30 ? 0 : point.value - PORTFOLIO_SERIES[index - 30].value));
+const PNL_SERIES = PORTFOLIO_SERIES.map((point, index) =>
+  index < 30 ? 0 : point.value - PORTFOLIO_SERIES[index - 30].value,
+);
 
 export function sliceByRange<T>(series: T[], range: DateRange): T[] {
   const days = DATE_RANGE_OPTIONS.find((option) => option.value === range)?.days ?? HISTORY_DAYS;
@@ -278,13 +283,17 @@ function afterWarmup<T>(series: T[], range: DateRange): T[] {
 /**
  * The six headline cards. Values that are denominated follow the toolbar
  * currency toggle; market quotes (BTC price, FX rate) stay in their own unit.
+ * All copy is referenced by key so the locale dictionaries stay the only place
+ * that holds user-facing text.
  */
 export function getKpiCards(currency: Currency, range: DateRange): KpiCardData[] {
   const window = sliceByRange(PORTFOLIO_SERIES, range);
   const days = window.length;
 
   const portfolioTrend = percentChange(window.map((point) => point.value));
-  const tomanSeries = window.map((point, index) => point.value * RATE_SERIES[PORTFOLIO_SERIES.length - days + index]);
+  const tomanSeries = window.map(
+    (point, index) => point.value * RATE_SERIES[PORTFOLIO_SERIES.length - days + index],
+  );
   const tomanTrend = percentChange(tomanSeries);
 
   const monthlyGrowth = GROWTH_SERIES[GROWTH_SERIES.length - 1];
@@ -298,87 +307,73 @@ export function getKpiCards(currency: Currency, range: DateRange): KpiCardData[]
   const suffix = currency === "USD" ? "$" : "₮";
   const headlineTrend = currency === "USD" ? portfolioTrend : tomanTrend;
   const trendAccent = (trend: number): KpiAccent => (trend >= 0 ? "positive" : "negative");
-  const comparison = `vs previous ${rangeLabel(range).toLowerCase()}`;
 
   return [
     {
       id: "portfolio-value",
-      title: "Portfolio Value",
+      titleKey: "kpi.portfolioValue",
       prefix: suffix,
       value: currency === "USD" ? PORTFOLIO_TOTAL_USD : PORTFOLIO_TOTAL_TOMAN,
       precision: 0,
       trend: headlineTrend,
-      trendLabel: comparison,
-      caption:
-        currency === "USD"
-          ? `Cost basis $${formatNumber(COST_BASIS_USD)}`
-          : `Cost basis ${formatNumber(toToman(COST_BASIS_USD), { compact: true })} ₮`,
+      trendLabel: { kind: "vsPreviousRange" },
       sparkline: window.map((point) => point.value),
       accent: trendAccent(headlineTrend),
     },
     {
       id: "portfolio-value-toman",
-      title: "Portfolio Value (Toman)",
+      titleKey: "kpi.portfolioValueToman",
       prefix: "₮",
       value: PORTFOLIO_TOTAL_TOMAN,
       precision: 0,
       trend: tomanTrend,
-      trendLabel: comparison,
-      caption: `${formatNumber(PORTFOLIO_TOTAL_USD)} USD equivalent`,
+      trendLabel: { kind: "vsPreviousRange" },
       sparkline: tomanSeries,
       accent: trendAccent(tomanTrend),
     },
     {
       id: "monthly-growth",
-      title: "Monthly Growth",
+      titleKey: "kpi.monthlyGrowth",
       suffix: "%",
       value: monthlyGrowth,
       precision: 2,
       trend: monthlyGrowth - previousGrowth,
-      trendLabel: "vs previous month",
-      caption: "Trailing 30-day growth rate",
+      trendLabel: { kind: "vsPreviousMonth" },
       sparkline: afterWarmup(GROWTH_SERIES, range),
       accent: trendAccent(monthlyGrowth),
     },
     {
       id: "monthly-pnl",
-      title: "Monthly Profit / Loss",
+      titleKey: "kpi.monthlyPnl",
       prefix: suffix,
       value: currency === "USD" ? monthlyPnl : toToman(monthlyPnl),
       precision: 0,
       trend: monthlyGrowth,
-      trendLabel: "last 30 days",
-      caption: monthlyPnl >= 0 ? "Realised + unrealised gain" : "Realised + unrealised loss",
+      trendLabel: { kind: "lastDays", days: 30 },
       sparkline: afterWarmup(PNL_SERIES, range),
       accent: trendAccent(monthlyPnl),
     },
     {
       id: "usd-toman-rate",
-      title: "USD / TOMAN Rate",
+      titleKey: "kpi.usdTomanRate",
       suffix: " TOMAN",
       value: RATE_SERIES[RATE_SERIES.length - 1],
       precision: 0,
       trend: rateTrend,
-      trendLabel: `last ${days} days`,
-      caption: rateTrend <= 0 ? "Toman strengthening" : "Toman weakening",
+      trendLabel: { kind: "lastDays", days },
       sparkline: rateWindow,
       accent: trendAccent(-rateTrend),
     },
     {
       id: "bitcoin-price",
-      title: "Bitcoin Price",
+      titleKey: "kpi.bitcoinPrice",
       prefix: "$",
       value: BTC_SERIES[BTC_SERIES.length - 1],
       precision: 0,
       trend: btcTrend,
-      trendLabel: `last ${days} days`,
-      caption: `${formatQuantity(ASSETS[0].quantity)} BTC held`,
+      trendLabel: { kind: "lastDays", days },
       sparkline: btcWindow,
       accent: trendAccent(btcTrend),
     },
   ];
-}
-
-function rangeLabel(range: DateRange): string {
-  return DATE_RANGE_OPTIONS.find((option) => option.value === range)?.label ?? "1 Year";
 }

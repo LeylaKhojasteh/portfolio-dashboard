@@ -5,8 +5,8 @@ export default function AnalyticsPage() {
   return (
     <DashboardShell>
       <PagePlaceholder
-        title="Analytics"
-        description="Risk metrics, correlation analysis, drawdowns and benchmarking against a market index will live here."
+        titleKey="placeholder.analytics.title"
+        descriptionKey="placeholder.analytics.description"
       />
     </DashboardShell>
   );

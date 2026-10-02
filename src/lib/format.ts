@@ -69,17 +69,78 @@ export function toUsd(toman: number): number {
   return toman / USD_TO_TOMAN;
 }
 
-const dateFormatters = {
-  long: new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }),
-  axis: new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", timeZone: "UTC" }),
-  month: new Intl.DateTimeFormat("en-GB", { month: "short", timeZone: "UTC" }),
-} as const;
+type DateStyle = "long" | "axis" | "month";
+
+/**
+ * Date formatting for the active locale. Persian renders the Jalali calendar
+ * with Persian digits; the day is never zero-padded so the string reads
+ * naturally in both languages.
+ */
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
+
+function dateFormatter(intl: string, style: DateStyle): Intl.DateTimeFormat {
+  const cacheKey = `${intl}:${style}`;
+  let formatter = dateFormatters.get(cacheKey);
+  if (!formatter) {
+    const options: Intl.DateTimeFormatOptions =
+      style === "month"
+        ? { month: "short", timeZone: "UTC" }
+        : style === "axis"
+          ? { day: "numeric", month: "short", timeZone: "UTC" }
+          : { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" };
+    formatter = new Intl.DateTimeFormat(intl, options);
+    dateFormatters.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+
+const TIME_FORMATTERS = new Map<string, Intl.DateTimeFormat>();
+
+function timeFormatter(intl: string): Intl.DateTimeFormat {
+  let formatter = TIME_FORMATTERS.get(intl);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(intl, {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+      timeZone: "UTC",
+    });
+    TIME_FORMATTERS.set(intl, formatter);
+  }
+  return formatter;
+}
+
+const NUMERIC_DATE_FORMATTERS = new Map<string, Intl.DateTimeFormat>();
+
+function numericDateFormatter(intl: string): Intl.DateTimeFormat {
+  let formatter = NUMERIC_DATE_FORMATTERS.get(intl);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(intl, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "UTC",
+    });
+    NUMERIC_DATE_FORMATTERS.set(intl, formatter);
+  }
+  return formatter;
+}
 
 /** ISO `yyyy-mm-dd` strings are parsed as UTC so server and client always agree. */
-export function formatDate(iso: string, style: keyof typeof dateFormatters): string {
+export function formatDate(iso: string, style: DateStyle, intl = "en-GB"): string {
   const date = new Date(`${iso}T00:00:00Z`);
   if (Number.isNaN(date.getTime())) return iso;
-  return dateFormatters[style].format(date);
+  return dateFormatter(intl, style).format(date);
+}
+
+/**
+ * Compact status stamp for the toolbar: numeric date plus 24h clock, no month
+ * names — `9/30/2026 14:05` in English, `1405/07/08 14:05` in Persian.
+ */
+export function formatStamp(dateIso: string, time: string, intl = "en-US"): string {
+  const date = new Date(`${dateIso}T${time}:00Z`);
+  if (Number.isNaN(date.getTime())) return dateIso;
+  return `${numericDateFormatter(intl).format(date)} ${timeFormatter(intl).format(date)}`;
 }
 
 export function trendDirection(value: number): TrendDirection {

@@ -2,13 +2,15 @@
 
 import { ChartPie } from "lucide-react";
 import { useDashboardPreferences } from "@/components/layout/dashboard-preferences";
+import { useTranslate } from "@/components/layout/locale-provider";
 import { formatMoney, formatNumber, toToman } from "@/lib/format";
 import { ALLOCATION } from "@/lib/mock-data";
 import { AllocationDonutChart } from "@/components/charts/allocation-donut-chart";
 import { Card, CardHeader } from "@/components/ui/card";
 
-/** Row 3 left — donut of weights plus a colour-matched, column-aligned legend. */
+/** Row 2 right — donut of weights plus a colour-matched, column-aligned legend. */
 export function AllocationDonutCard() {
+  const t = useTranslate();
   const { currency } = useDashboardPreferences();
   const slices = ALLOCATION;
   const money = (usd: number) =>
@@ -18,8 +20,7 @@ export function AllocationDonutCard() {
     <Card className="h-full">
       <CardHeader
         icon={<ChartPie className="size-[14px]" strokeWidth={1.8} />}
-        title="Portfolio Allocation"
-        subtitle="Share by asset class"
+        title={t("donut.title")}
         divided
       />
 
@@ -29,9 +30,9 @@ export function AllocationDonutCard() {
 
       <div className="mt-auto">
         <div className="grid grid-cols-[1fr_48px_76px] items-center gap-2 border-t border-line-soft px-4 py-1">
-          <span className="th-eyebrow">Asset</span>
-          <span className="th-eyebrow text-right">Weight</span>
-          <span className="th-eyebrow text-right">Value</span>
+          <span className="th-eyebrow">{t("donut.colAsset")}</span>
+          <span className="th-eyebrow text-end">{t("donut.colWeight")}</span>
+          <span className="th-eyebrow text-end">{t("donut.colValue")}</span>
         </div>
         <ul className="divide-y divide-line-soft">
           {slices.map((slice) => (
@@ -47,10 +48,10 @@ export function AllocationDonutCard() {
                 />
                 <span className="truncate text-[11px] font-medium tracking-tight text-ink">{slice.label}</span>
               </span>
-              <span className="numeric text-right text-[11px] text-ink-muted">
+              <span className="numeric text-end text-[11px] text-ink-muted">
                 {formatNumber(slice.percentage, { digits: 1 })}%
               </span>
-              <span className="numeric text-right text-[11px] font-semibold tracking-tight text-ink">
+              <span className="numeric text-end text-[11px] font-semibold tracking-tight text-ink">
                 {money(slice.value)}
               </span>
             </li>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useId } from "react";
 import {
@@ -16,11 +16,14 @@ import type { Currency, DateRange, PortfolioPoint } from "@/types";
 import { CHART_TOKENS } from "@/lib/chart-theme";
 import { formatDate, formatMoney } from "@/lib/format";
 import { PortfolioTooltip } from "@/components/charts/chart-tooltip";
+import { useTranslate } from "@/components/layout/locale-provider";
 
 interface PortfolioGrowthChartProps {
   points: PortfolioPoint[];
   currency: Currency;
   range: DateRange;
+  /** BCP-47 tag of the active locale, used for axis and tooltip dates. */
+  intl?: string;
 }
 
 function axisLabel(value: number, currency: Currency): string {
@@ -28,15 +31,16 @@ function axisLabel(value: number, currency: Currency): string {
 }
 
 /** Area + line portfolio value chart with a dashed average reference line. */
-export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowthChartProps) {
+export function PortfolioGrowthChart({ points, currency, range, intl = "en-GB" }: PortfolioGrowthChartProps) {
+  const t = useTranslate();
   const gradientId = `portfolio-area-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
   const tickDateStyle = range === "1Y" ? "month" : "axis";
   const average = points.reduce((total, point) => total + point.value, 0) / Math.max(points.length, 1);
 
   return (
-    <div className="h-[196px] w-full overflow-hidden sm:h-[224px] lg:h-[248px]">
+    <div className="h-[212px] w-full overflow-hidden sm:h-[248px] lg:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={points} margin={{ top: 14, right: 14, bottom: 2, left: 2 }}>
+        <ComposedChart data={points} margin={{ top: 14, right: 14, bottom: 2, left: 12 }}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={CHART_TOKENS.line} stopOpacity={0.3} />
@@ -48,7 +52,7 @@ export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowt
           <CartesianGrid vertical={false} stroke={CHART_TOKENS.grid} strokeDasharray="2 6" />
           <XAxis
             dataKey="date"
-            tickFormatter={(date: string) => formatDate(date, tickDateStyle)}
+            tickFormatter={(date: string) => formatDate(date, tickDateStyle, intl)}
             tickLine={false}
             axisLine={false}
             minTickGap={28}
@@ -59,16 +63,17 @@ export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowt
             tickFormatter={(value: number) => axisLabel(value, currency)}
             tickLine={false}
             axisLine={false}
-            width={68}
+            width={92}
+            tickMargin={12}
             tick={{ fill: CHART_TOKENS.axis, fontSize: 11 }}
             domain={[
-              (min: number) => min * 0.96,
-              (max: number) => max * 1.04,
+              (min: number) => min * 0.94,
+              (max: number) => max * 1.06,
             ]}
           />
 
           <Tooltip
-            content={<PortfolioTooltip currency={currency} />}
+            content={<PortfolioTooltip currency={currency} intl={intl} />}
             cursor={{ stroke: CHART_TOKENS.axisStrong, strokeWidth: 1, strokeDasharray: "4 4" }}
           />
 
@@ -94,7 +99,7 @@ export function PortfolioGrowthChart({ points, currency, range }: PortfolioGrowt
             strokeDasharray="5 5"
             strokeOpacity={0.7}
             label={{
-              value: "period average",
+              value: t("chart.average"),
               position: "insideTopRight",
               fill: CHART_TOKENS.gold,
               fontSize: 10,

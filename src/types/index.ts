@@ -1,12 +1,11 @@
 import type { PaletteKey } from "@/lib/chart-theme";
+import type { TranslationKey } from "@/locales";
 
 export type Currency = "USD" | "TOMAN";
 
 export type TransactionType = "BUY" | "SELL" | "TRANSFER" | "DEPOSIT" | "WITHDRAW";
 
 export type DateRange = "D" | "W" | "1M" | "3M" | "6M" | "1Y";
-
-export type Language = "EN" | "FA";
 
 export type TrendDirection = "up" | "down" | "flat";
 
@@ -67,10 +66,16 @@ export interface AllocationSlice {
 
 export type KpiAccent = "neutral" | "positive" | "negative" | "accent";
 
+/** How the KPI trend is qualified — rendered through the locale dictionaries. */
+export type KpiTrendLabel =
+  | { kind: "vsPreviousRange" }
+  | { kind: "vsPreviousMonth" }
+  | { kind: "lastDays"; days: number };
+
 export interface KpiCardData {
   id: string;
-  title: string;
-  /** Short unit suffix rendered next to the value, e.g. `$`, `%`, `₮`. */
+  titleKey: TranslationKey;
+  /** Short unit suffix rendered next to the value, e.g. `$`, `%`. */
   prefix?: string;
   suffix?: string;
   value: number;
@@ -78,20 +83,10 @@ export interface KpiCardData {
   precision?: number;
   /** Signed percentage change for the selected window. */
   trend: number;
-  /** Human label describing the trend window, e.g. "vs last month". */
-  trendLabel: string;
-  /** Extra context line under the value, e.g. "cost basis $118,400". */
-  caption?: string;
+  trendLabel: KpiTrendLabel;
+  /** Latest samples for the card's sparkline. */
   sparkline: number[];
   accent: KpiAccent;
-}
-
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: string;
-  /** Section separator rendered above this item. */
-  section?: string;
 }
 
 export interface SegmentedOption<T extends string> {

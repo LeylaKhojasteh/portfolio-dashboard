@@ -5,8 +5,8 @@ export default function SettingsPage() {
   return (
     <DashboardShell>
       <PagePlaceholder
-        title="Settings"
-        description="Preferred currency, exchange rate source, notification rules and account preferences will be managed here."
+        titleKey="placeholder.settings.title"
+        descriptionKey="placeholder.settings.description"
       />
     </DashboardShell>
   );

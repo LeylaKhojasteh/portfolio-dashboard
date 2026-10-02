@@ -1,7 +1,10 @@
+"use client";
+
 import { CHART_TOKENS } from "@/lib/chart-theme";
 import { formatNumber } from "@/lib/format";
 import type { KpiAccent, KpiCardData } from "@/types";
 import { Sparkline } from "@/components/charts/sparkline";
+import { useTranslate } from "@/components/layout/locale-provider";
 import { Card } from "@/components/ui/card";
 import { TrendIndicator } from "@/components/ui/trend-indicator";
 
@@ -13,16 +16,31 @@ const SPARK_COLORS: Record<KpiAccent, string> = {
   accent: CHART_TOKENS.gold,
 };
 
+interface KpiCardProps {
+  card: KpiCardData;
+  /** Already-localized label for the active range, used by `vsPreviousRange`. */
+  rangeLabel: string;
+}
+
+/** Resolves the structured trend qualifier into a localized string. */
+function trendLabelText(card: KpiCardData, rangeLabel: string, t: ReturnType<typeof useTranslate>) {
+  const label = card.trendLabel;
+  if (label.kind === "vsPreviousRange") return t("kpi.vsPreviousRange", { range: rangeLabel });
+  if (label.kind === "vsPreviousMonth") return t("kpi.vsPreviousMonth");
+  return t("kpi.lastDays", { days: label.days });
+}
+
 /**
  * Headline metric tile in a compact horizontal arrangement: label, value and
  * change stacked on the left, a small trend line pinned to the right.
  */
-export function KpiCard({ card }: { card: KpiCardData }) {
+export function KpiCard({ card, rangeLabel }: KpiCardProps) {
+  const t = useTranslate();
   const compact = Math.abs(card.value) >= 100_000_000;
 
   return (
     <Card className="group gap-0 overflow-hidden p-3 transition-[box-shadow,border-color,transform] duration-300 ease-out-soft hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
-      <h3 className="eyebrow line-clamp-1">{card.title}</h3>
+      <h3 className="eyebrow line-clamp-1">{t(card.titleKey)}</h3>
 
       <div className="mt-2 flex items-end justify-between gap-2">
         <p className="numeric flex min-w-0 items-baseline gap-0.5 text-[1.25rem] leading-none font-semibold tracking-tight text-ink">
@@ -45,12 +63,8 @@ export function KpiCard({ card }: { card: KpiCardData }) {
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5">
         <TrendIndicator value={card.trend} />
-        <span className="truncate text-[10.5px] text-ink-faint">{card.trendLabel}</span>
+        <span className="truncate text-[10.5px] text-ink-faint">{trendLabelText(card, rangeLabel, t)}</span>
       </div>
-
-      {card.caption ? (
-        <p className="mt-1.5 line-clamp-1 text-[10.5px] leading-relaxed text-ink-muted">{card.caption}</p>
-      ) : null}
     </Card>
   );
 }

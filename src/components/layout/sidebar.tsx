@@ -8,13 +8,12 @@ import {
   ChartNoAxesCombined,
   LayoutDashboard,
   LogIn,
-  PanelLeftClose,
-  PanelLeftOpen,
   Settings,
   Wallet,
 } from "lucide-react";
 import { cx } from "@/lib/cx";
-import { NAV_ITEMS } from "@/lib/mock-data";
+import { NAV_ITEMS } from "@/lib/navigation";
+import { useTranslate } from "@/components/layout/locale-provider";
 
 type NavIcon = ComponentType<{ className?: string; strokeWidth?: number }>;
 
@@ -34,14 +33,14 @@ export const SIDEBAR_WIDTH = {
 
 interface SidebarProps {
   collapsed: boolean;
-  onToggleCollapsed?: () => void;
   /** Fires on every navigation — the mobile drawer uses it to close itself. */
   onNavigate?: () => void;
   className?: string;
 }
 
-export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }: SidebarProps) {
+export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslate();
 
   return (
     <aside
@@ -67,8 +66,12 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
             collapsed ? "w-0 opacity-0" : "w-auto opacity-100",
           )}
         >
-          <p className="truncate text-[12.5px] leading-tight font-semibold tracking-tight text-ink">Meridian</p>
-          <p className="truncate text-[10px] leading-tight tracking-wide text-ink-faint">Portfolio Intelligence</p>
+          <p className="truncate text-[12.5px] leading-tight font-semibold tracking-tight text-ink">
+            {t("brand.name")}
+          </p>
+          <p className="truncate text-[10px] leading-tight tracking-wide text-ink-faint">
+            {t("brand.subtitle")}
+          </p>
         </div>
       </div>
 
@@ -77,13 +80,13 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
           const Icon = NAV_ICONS[item.icon];
           const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           const previous = NAV_ITEMS[index - 1];
-          const showSection = Boolean(item.section) && item.section !== previous?.section;
+          const showSection = Boolean(item.sectionKey) && item.sectionKey !== previous?.sectionKey;
 
           return (
             <div key={item.href}>
               {showSection && !collapsed ? (
-                <p className="mb-1 mt-4 px-2.5 text-[9px] font-semibold tracking-[0.16em] text-ink-faint/90 uppercase first:mt-0">
-                  {item.section}
+                <p className="mb-1 mt-4 px-2.5 text-[9px] font-semibold tracking-[0.16em] text-ink-faint/90 uppercase">
+                  {item.sectionKey ? t(item.sectionKey) : null}
                 </p>
               ) : null}
               {showSection && collapsed ? (
@@ -93,10 +96,10 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
                 href={item.href}
                 onClick={onNavigate}
                 aria-current={isActive ? "page" : undefined}
-                title={collapsed ? item.label : undefined}
+                title={collapsed ? t(item.labelKey) : undefined}
                 className={cx(
                   "group relative mb-0.5 flex h-[34px] items-center rounded-lg text-[12.5px] transition-colors duration-200",
-                  collapsed ? "w-full justify-center" : "w-full gap-2.5 pl-2.5 pr-2",
+                  collapsed ? "w-full justify-center" : "w-full gap-2.5 ps-2.5 pe-2",
                   isActive
                     ? "bg-accent-deep font-semibold text-canvas shadow-raised"
                     : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-ink",
@@ -104,13 +107,13 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
               >
                 {isActive ? (
                   <span
-                    className="absolute top-1/2 -left-2.5 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-accent"
+                    className="absolute top-1/2 -start-2.5 h-5 w-[3px] -translate-y-1/2 rounded-e-full bg-accent"
                     aria-hidden
                   />
                 ) : null}
                 <Icon
                   className={cx(
-                    "size-[17px] shrink-0 transition-colors duration-200",
+                    "size-[19px] shrink-0 transition-colors duration-200",
                     isActive ? "text-canvas" : "text-ink-faint group-hover:text-accent",
                   )}
                   strokeWidth={isActive ? 2.2 : 1.8}
@@ -121,7 +124,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
                     collapsed ? "w-0 opacity-0" : "w-auto opacity-100",
                   )}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             </div>
@@ -129,7 +132,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
         })}
       </nav>
 
-      {/* Account card — portfolio owner, plan badge and the collapse control. */}
+      {/* Account slot — there is no auth yet, so it invites a sign-in. */}
       <div className="shrink-0 border-t border-line-soft p-2.5">
         <div
           className={cx(
@@ -137,8 +140,8 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
             collapsed ? "justify-center px-1.5" : "gap-2 px-2",
           )}
         >
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-accent-line bg-gradient-to-b from-accent-soft to-surface text-[10px] font-semibold tracking-tight text-accent-deep">
-            RA
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface-sunken text-ink-faint">
+            <LogIn className="size-3.5" strokeWidth={1.8} />
           </span>
 
           <div
@@ -147,30 +150,11 @@ export function Sidebar({ collapsed, onToggleCollapsed, onNavigate, className }:
               collapsed ? "w-0 opacity-0" : "w-auto opacity-100",
             )}
           >
-            <p className="truncate text-[12px] leading-tight font-medium text-ink">Reza Ahmadi</p>
-            <p className="mt-0.5 flex items-center gap-1.5">
-              <span className="truncate text-[10px] leading-none text-ink-faint">reza@meridian.io</span>
-              <span className="inline-flex shrink-0 items-center rounded border border-accent-line bg-accent-soft px-1 py-px text-[8px] font-semibold tracking-[0.08em] text-accent-deep uppercase">
-                Pro
-              </span>
+            <p className="truncate text-[12px] leading-tight font-medium text-ink">{t("account.loginTitle")}</p>
+            <p className="mt-0.5 truncate text-[10px] leading-none text-ink-faint">
+              {t("account.loginHint")}
             </p>
           </div>
-
-          {onToggleCollapsed ? (
-            <button
-              type="button"
-              onClick={onToggleCollapsed}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-faint transition-colors duration-200 hover:bg-accent-soft hover:text-accent-deep"
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="size-3.5" strokeWidth={1.8} />
-              ) : (
-                <PanelLeftClose className="size-3.5" strokeWidth={1.8} />
-              )}
-            </button>
-          ) : null}
         </div>
       </div>
     </aside>

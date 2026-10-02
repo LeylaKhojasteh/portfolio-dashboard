@@ -57,15 +57,15 @@ export function Dropdown<T extends string>({
         aria-controls={menuId}
         aria-label={ariaLabel}
         className={cx(
-          "flex h-8 cursor-pointer items-center gap-2 rounded-lg border bg-surface px-2.5 text-[11.5px] font-medium whitespace-nowrap shadow-raised transition-colors duration-200",
+          "flex h-8 cursor-pointer items-center gap-2 rounded-lg border bg-surface-sunken px-2.5 text-[11.5px] font-medium whitespace-nowrap transition-colors duration-200",
           isOpen
-            ? "border-accent-line text-accent-deep"
-            : "border-line text-ink-soft hover:border-accent-line hover:text-accent-deep",
+            ? "border-line-strong bg-surface text-ink shadow-raised"
+            : "border-line text-ink-soft hover:border-line-strong hover:bg-surface hover:text-ink",
         )}
       >
         <CalendarRange className="size-3.5 shrink-0 text-ink-faint" strokeWidth={1.8} />
         <span className="text-ink-muted">{label}</span>
-        <span className="text-ink">{active?.label}</span>
+        <span className="font-semibold text-ink">{active?.label}</span>
         <ChevronDown
           className={cx(
             "size-3.5 shrink-0 text-ink-faint transition-transform duration-200",
@@ -80,7 +80,7 @@ export function Dropdown<T extends string>({
           id={menuId}
           role="listbox"
           aria-label={ariaLabel}
-          className="absolute top-full left-0 z-50 mt-1 min-w-[168px] overflow-hidden rounded-lg border border-line bg-surface p-1 shadow-pop"
+          className="absolute top-full start-0 z-50 mt-1 min-w-[168px] overflow-hidden rounded-lg border border-line bg-surface p-1 shadow-pop"
         >
           {options.map((option) => {
             const isSelected = option.value === value;
@@ -95,10 +95,10 @@ export function Dropdown<T extends string>({
                   setIsOpen(false);
                 }}
                 className={cx(
-                  "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-[11.5px] transition-colors duration-150",
+                  "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-start text-[11.5px] transition-colors duration-150",
                   isSelected
-                    ? "bg-accent-soft font-medium text-accent-deep"
-                    : "text-ink-muted hover:bg-surface-hover hover:text-ink-soft",
+                    ? "bg-surface-sunken font-semibold text-ink shadow-[inset_0_0_0_1px_var(--color-line)]"
+                    : "font-medium text-ink-muted hover:bg-surface-hover hover:text-ink-soft",
                 )}
               >
                 <Check

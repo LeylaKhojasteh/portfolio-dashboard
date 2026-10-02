@@ -61,6 +61,7 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-fade-in: fade-in 200ms ease-out both;
   --animate-slide-in: slide-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-in-rtl: slide-in-rtl 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes fade-in {
@@ -75,6 +76,16 @@
 @keyframes slide-in {
   from {
     transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* The mobile drawer enters from the other edge in RTL. */
+@keyframes slide-in-rtl {
+  from {
+    transform: translateX(100%);
   }
   to {
     transform: translateX(0);
@@ -110,7 +121,7 @@
     scrollbar-color: var(--color-line-strong) transparent;
   }
 
-  /* Institutional numerals everywhere a figure is compared column-to-column. */
+  /* Numbers, currencies and percentages stay LTR and isolated inside RTL copy. */
   table {
     font-variant-numeric: tabular-nums;
   }
@@ -139,6 +150,8 @@
 @utility numeric {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 /** Small uppercase eyebrow used for every panel and table header. */

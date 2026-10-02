@@ -15,7 +15,6 @@ export function Card({ className, children }: CardProps) {
 
 interface CardHeaderProps {
   title: string;
-  subtitle?: string;
   icon?: ReactNode;
   action?: ReactNode;
   /** Draws a hairline under the header — used above dense ledger tables. */
@@ -23,25 +22,22 @@ interface CardHeaderProps {
   className?: string;
 }
 
-export function CardHeader({ title, subtitle, icon, action, divided, className }: CardHeaderProps) {
+export function CardHeader({ title, icon, action, divided, className }: CardHeaderProps) {
   return (
     <header
       className={cx(
-        "flex items-start justify-between gap-4 px-4 pt-3 pb-2.5",
+        "flex items-center justify-between gap-4 px-4 pt-3 pb-2.5",
         divided && "border-b border-line-soft",
         className,
       )}
     >
-      <div className="flex min-w-0 items-start gap-2">
+      <div className="flex min-w-0 items-center gap-2">
         {icon ? (
-          <span className="mt-px flex size-6 shrink-0 items-center justify-center rounded-md border border-line bg-surface-sunken text-ink-muted">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-line bg-surface-sunken text-ink-muted">
             {icon}
           </span>
         ) : null}
-        <div className="min-w-0">
-          <h2 className="truncate text-[13px] leading-tight font-semibold tracking-tight text-ink">{title}</h2>
-          {subtitle ? <p className="mt-0.5 truncate text-[11px] text-ink-muted">{subtitle}</p> : null}
-        </div>
+        <h2 className="truncate text-[13px] leading-tight font-semibold tracking-tight text-ink">{title}</h2>
       </div>
       {action ? <div className="flex shrink-0 items-center gap-2">{action}</div> : null}
     </header>

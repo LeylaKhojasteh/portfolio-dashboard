@@ -4,6 +4,7 @@ import type { TooltipContentProps } from "recharts";
 import type { AllocationSlice, Currency, PortfolioPoint } from "@/types";
 import { CHART_TOKENS } from "@/lib/chart-theme";
 import { formatDate, formatMoney, formatNumber, toToman, USD_TO_TOMAN } from "@/lib/format";
+import { useTranslate } from "@/components/layout/locale-provider";
 
 /** Props Recharts injects into a custom `content` element. */
 type InjectedTooltipProps = Partial<TooltipContentProps<number, string>>;
@@ -17,7 +18,7 @@ interface TooltipRow {
 
 function TooltipSurface({ title, rows, footer }: { title: string; rows: TooltipRow[]; footer?: string }) {
   return (
-    <div className="min-w-[212px] rounded-[10px] border border-line bg-surface p-3 shadow-pop">
+    <div className="z-50 min-w-[212px] rounded-[10px] border border-line bg-surface p-3 shadow-pop">
       <p className="eyebrow">{title}</p>
       <dl className="mt-2.5 space-y-1.5">
         {rows.map((row) => (
@@ -56,7 +57,9 @@ export function PortfolioTooltip({
   active,
   payload,
   currency = "USD",
-}: InjectedTooltipProps & { currency: Currency }) {
+  intl = "en-GB",
+}: InjectedTooltipProps & { currency: Currency; intl?: string }) {
+  const t = useTranslate();
   const entry = payload?.[0];
   const point = entry?.payload as PortfolioPoint | undefined;
   if (!active || !entry || !point) return null;
@@ -65,12 +68,16 @@ export function PortfolioTooltip({
 
   return (
     <TooltipSurface
-      title={formatDate(point.date, "long")}
+      title={formatDate(point.date, "long", intl)}
       rows={[
-        { label: "Portfolio value", value: displayAmount(value, currency), color: CHART_TOKENS.line },
-        { label: "Net flow", value: displayAmount(point.netFlow, currency), muted: true },
+        { label: t("tooltip.portfolioValue"), value: displayAmount(value, currency), color: CHART_TOKENS.line },
+        { label: t("tooltip.netFlow"), value: displayAmount(point.netFlow, currency), muted: true },
       ]}
-      footer={currency === "USD" ? `Rate 1 USD = ${formatNumber(USD_TO_TOMAN)} ₮` : undefined}
+      footer={
+        currency === "USD"
+          ? t("tooltip.rate", { rate: formatNumber(USD_TO_TOMAN) })
+          : undefined
+      }
     />
   );
 }
@@ -80,6 +87,7 @@ export function AllocationTooltip({
   payload,
   currency = "USD",
 }: InjectedTooltipProps & { currency: Currency }) {
+  const t = useTranslate();
   const entry = payload?.[0];
   const slice = entry?.payload as AllocationSlice | undefined;
   if (!active || !slice) return null;
@@ -88,8 +96,12 @@ export function AllocationTooltip({
     <TooltipSurface
       title={slice.label}
       rows={[
-        { label: "Allocation", value: `${formatNumber(slice.percentage, { digits: 1 })}%`, color: slice.color },
-        { label: "Value", value: displayAmount(slice.value, currency) },
+        {
+          label: t("tooltip.allocation"),
+          value: `${formatNumber(slice.percentage, { digits: 1 })}%`,
+          color: slice.color,
+        },
+        { label: t("tooltip.value"), value: displayAmount(slice.value, currency) },
       ]}
     />
   );

@@ -2,41 +2,48 @@
 
 import type { ComponentType } from "react";
 import { Construction } from "lucide-react";
+import type { TranslationKey } from "@/locales";
+import { useTranslate } from "@/components/layout/locale-provider";
 import { Card } from "@/components/ui/card";
 
 interface PagePlaceholderProps {
-  title: string;
-  description: string;
+  titleKey: TranslationKey;
+  descriptionKey: TranslationKey;
 }
 
-const STAGES = ["Data modelling", "API endpoints", "Dashboard views", "Polish & QA"];
+const STAGE_KEYS: TranslationKey[] = [
+  "placeholder.stages.data",
+  "placeholder.stages.api",
+  "placeholder.stages.views",
+  "placeholder.stages.qa",
+];
 
 /** Stand-in used by the sidebar routes that are out of scope for this phase. */
-export function PagePlaceholder({ title, description }: PagePlaceholderProps) {
+export function PagePlaceholder({ titleKey, descriptionKey }: PagePlaceholderProps) {
+  const t = useTranslate();
   const Icon: ComponentType<{ className?: string; strokeWidth?: number }> = Construction;
 
   return (
     <Card className="items-center justify-center gap-5 px-6 py-12 text-center sm:py-16">
-      <span className="flex size-12 items-center justify-center rounded-xl border border-accent-line bg-gradient-to-b from-surface to-accent-soft text-accent shadow-raised">
-        <Icon className="size-5" strokeWidth={1.8} />
+      <span className="flex size-14 items-center justify-center rounded-2xl border border-line bg-gradient-to-b from-surface to-surface-sunken text-accent shadow-raised">
+        <Icon className="size-6" strokeWidth={1.8} />
       </span>
 
-      <div className="max-w-md space-y-2.5">
-        <p className="eyebrow">Coming Next</p>
-        <h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2>
-        <p className="text-[13px] leading-relaxed text-ink-muted">{description}</p>
+      <div className="max-w-md space-y-2">
+        <h2 className="text-xl font-semibold tracking-tight text-ink">{t(titleKey)}</h2>
+        <p className="text-sm leading-relaxed text-ink-muted">{t(descriptionKey)}</p>
       </div>
 
       <ol className="flex flex-wrap items-center justify-center gap-2">
-        {STAGES.map((stage, index) => (
+        {STAGE_KEYS.map((stageKey, index) => (
           <li
-            key={stage}
-            className="flex items-center gap-2 rounded-lg border border-line bg-surface-sunken px-3 py-1.5 text-[11.5px] text-ink-muted"
+            key={stageKey}
+            className="flex items-center gap-2 rounded-full border border-line bg-surface-sunken px-3 py-1.5 text-xs text-ink-muted"
           >
             <span className="numeric flex size-4 items-center justify-center rounded-full bg-line-strong text-[9px] font-semibold text-surface">
               {index + 1}
             </span>
-            {stage}
+            {t(stageKey)}
           </li>
         ))}
       </ol>

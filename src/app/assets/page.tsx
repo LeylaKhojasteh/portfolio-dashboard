@@ -5,8 +5,8 @@ export default function AssetsPage() {
   return (
     <DashboardShell>
       <PagePlaceholder
-        title="Assets"
-        description="Per-asset detail pages with cost basis, realised P/L and quantity history will be wired to the portfolio API."
+        titleKey="placeholder.assets.title"
+        descriptionKey="placeholder.assets.description"
       />
     </DashboardShell>
   );
