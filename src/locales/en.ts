@@ -25,7 +25,7 @@ export const en = {
     email: "reza@meridian.io",
     plan: "Pro",
     loginTitle: "Please Login",
-    loginHint: "Sign in to continue",
+    loginHint: "or Sign Up to Continue",
   },
   topbar: {
     title: "Portfolio Dashboard",

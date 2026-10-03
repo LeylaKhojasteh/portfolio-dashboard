@@ -11,6 +11,8 @@ export const ASSET_PALETTE = {
   sui: "#8a6b6b",
   stocks: "#6f7f5f",
   gold: "#8c8474",
+  /* Cash balance / Tether — muted teal so it sits inside the warm palette. */
+  usdt: "#3f7d6a",
 } as const;
 
 export type PaletteKey = keyof typeof ASSET_PALETTE;
@@ -24,6 +26,9 @@ const SYMBOL_TO_PALETTE_KEY: Record<string, PaletteKey> = {
   SUI: "sui",
   STK: "stocks",
   GLD: "gold",
+  USDT: "usdt",
+  /* Cash balance is held as Tether, so its rows resolve to the USDT mark. */
+  USD: "usdt",
 };
 
 export function assetColor(symbol: string): string | undefined {

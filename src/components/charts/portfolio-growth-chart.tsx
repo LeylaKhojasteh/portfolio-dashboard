@@ -40,7 +40,7 @@ export function PortfolioGrowthChart({ points, currency, range, intl = "en-GB" }
   return (
     <div className="h-[212px] w-full overflow-hidden sm:h-[248px] lg:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={points} margin={{ top: 14, right: 14, bottom: 2, left: 12 }}>
+        <ComposedChart data={points} margin={{ top: 14, right: 14, bottom: 2, left: 0 }}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={CHART_TOKENS.line} stopOpacity={0.3} />
@@ -63,8 +63,8 @@ export function PortfolioGrowthChart({ points, currency, range, intl = "en-GB" }
             tickFormatter={(value: number) => axisLabel(value, currency)}
             tickLine={false}
             axisLine={false}
-            width={92}
-            tickMargin={12}
+            width={64}
+            tickMargin={8}
             tick={{ fill: CHART_TOKENS.axis, fontSize: 11 }}
             domain={[
               (min: number) => min * 0.94,

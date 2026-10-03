@@ -23,7 +23,7 @@ export const fa: Dictionary = {
     email: "reza@meridian.io",
     plan: "حرفه‌ای",
     loginTitle: "لطفاً وارد شوید",
-    loginHint: "برای ادامه وارد حساب کاربری شوید",
+    loginHint: "یا ثبت نام کنید",
   },
   topbar: {
     title: "داشبورد دارایی",

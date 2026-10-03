@@ -44,7 +44,7 @@ export function TopBar({
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-[1720px] flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 sm:px-4 lg:h-[60px] lg:flex-nowrap lg:py-0">
+      <div className="mx-auto flex w-full max-w-[1720px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2 sm:px-4 lg:h-[60px] lg:flex-nowrap lg:py-0">
         {/* Identity */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
           <button
@@ -60,8 +60,8 @@ export function TopBar({
           </h1>
         </div>
 
-        {/* Period filter */}
-        <div className="order-last flex w-full items-center justify-start md:justify-center lg:order-none lg:w-auto">
+        {/* One control group: period, language, currency, status */}
+        <div className="order-last flex w-full flex-wrap items-center gap-x-4 gap-y-2 md:justify-end lg:order-none lg:w-auto">
           <Dropdown
             ariaLabel={t("range.label")}
             label={t("range.label")}
@@ -69,10 +69,7 @@ export function TopBar({
             value={dateRange}
             onChange={onDateRangeChange}
           />
-        </div>
 
-        {/* Display units + account utilities */}
-        <div className="flex shrink-0 items-center justify-end gap-2 lg:flex-1">
           <SegmentedControl
             ariaLabel={t("topbar.language")}
             options={LANGUAGE_OPTIONS}
@@ -88,7 +85,7 @@ export function TopBar({
             onChange={onCurrencyChange}
           />
 
-          <div className="hidden h-5 w-px bg-line md:block" aria-hidden />
+          <div className="hidden h-5 w-px bg-line xl:block" aria-hidden />
 
           <span className="hidden items-center gap-1.5 text-[10.5px] whitespace-nowrap text-ink-muted xl:flex">
             <span className="size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />

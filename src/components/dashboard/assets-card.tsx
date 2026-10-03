@@ -1,11 +1,10 @@
 "use client";
 
-import { Wallet } from "lucide-react";
-import { ASSET_PALETTE } from "@/lib/chart-theme";
 import { formatMoney, toToman } from "@/lib/format";
 import { ASSETS } from "@/lib/mock-data";
 import { useDashboardPreferences } from "@/components/layout/dashboard-preferences";
 import { useTranslate } from "@/components/layout/locale-provider";
+import { AssetIcon } from "@/components/ui/asset-icon";
 import { Card, CardHeader } from "@/components/ui/card";
 import { TrendValue } from "@/components/ui/trend-indicator";
 
@@ -18,11 +17,7 @@ export function AssetsCard() {
 
   return (
     <Card className="h-full overflow-hidden">
-      <CardHeader
-        icon={<Wallet className="size-[14px]" strokeWidth={1.8} />}
-        title={t("assets.title")}
-        divided
-      />
+      <CardHeader title={t("assets.title")} divided />
 
       <div className="flex-1 overflow-x-auto">
         <table className="w-full min-w-[400px] border-collapse text-start">
@@ -43,23 +38,14 @@ export function AssetsCard() {
             </tr>
           </thead>
           <tbody>
-            {ASSETS.map((asset) => {
-              const color = ASSET_PALETTE[asset.id];
-
-              return (
-                <tr
-                  key={asset.id}
-                  className="border-b border-line-soft transition-colors last:border-b-0 hover:bg-accent-soft/50"
-                >
+            {ASSETS.map((asset) => (
+              <tr
+                key={asset.id}
+                className="border-b border-line-soft transition-colors last:border-b-0 hover:bg-accent-soft/50"
+              >
                   <td className="px-4 py-[3px]">
-                    <span className="flex items-center gap-1.5">
-                      <span
-                        className="flex size-[17px] shrink-0 items-center justify-center rounded-[4px] border text-[8px] font-semibold"
-                        style={{ backgroundColor: `${color}1A`, borderColor: `${color}33`, color }}
-                        aria-hidden
-                      >
-                        {asset.symbol.slice(0, 2)}
-                      </span>
+                    <span className="flex items-center gap-2">
+                      <AssetIcon assetId={asset.id} size={22} />
                       <span className="min-w-0">
                         <span className="block truncate text-[11px] leading-[1.1] font-medium tracking-tight text-ink">
                           {asset.name}
@@ -91,9 +77,8 @@ export function AssetsCard() {
                       </span>
                     </span>
                   </td>
-                </tr>
-              );
-            })}
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>

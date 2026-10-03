@@ -18,22 +18,22 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
   return (
     // Recharts does not mirror cartesian axes, so the plot stays LTR inside the
     // RTL page; only the chart canvas is forced, never the surrounding labels.
-<div dir="ltr" className="h-[330px] w-full overflow-hidden">
+<div dir="ltr" className="h-[290px] w-full overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 6, right: 48, bottom: 6, left: 0 }}
-          barCategoryGap="22%"
+          margin={{ top: 8, right: 54, bottom: 8, left: 0 }}
+          barCategoryGap="32%"
         >
-<XAxis type="number" hide domain={[0, maxPercentage * 1.18]} />
+<XAxis type="number" hide domain={[0, maxPercentage * 1.2]} />
           <YAxis
             type="category"
             dataKey="label"
-            width={52}
+            width={46}
             tickLine={false}
             axisLine={false}
-            tick={{ fill: CHART_TOKENS.axisStrong, fontSize: 11.5, fontWeight: 600 }}
+            tick={{ fill: CHART_TOKENS.axisStrong, fontSize: 12, fontWeight: 700 }}
           />
           <Tooltip
             content={<AllocationTooltip currency={currency} />}
@@ -41,7 +41,7 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
           />
           <Bar
             dataKey="percentage"
-            barSize={17}
+            barSize={14}
             radius={[5, 5, 5, 5]}
             animationDuration={650}
             background={{ fill: CHART_TOKENS.track, radius: 5 }}
@@ -52,9 +52,9 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
             <LabelList
               dataKey="percentage"
               position="right"
-              offset={12}
+              offset={14}
               fill={CHART_TOKENS.axisStrong}
-              fontSize={12}
+              fontSize={13}
               fontWeight={700}
               formatter={(value) => `${formatNumber(Number(value ?? 0), { digits: 1 })}%`}
             />

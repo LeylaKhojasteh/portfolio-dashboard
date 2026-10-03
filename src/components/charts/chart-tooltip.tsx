@@ -82,16 +82,19 @@ export function PortfolioTooltip({
   );
 }
 
-export function AllocationTooltip({
-  active,
-  payload,
-  currency = "USD",
-}: InjectedTooltipProps & { currency: Currency }) {
+/**
+ * Presentational slice card shared by the recharts tooltips and the hover
+ * tooltip on the stacked allocation strip, so every allocation surface reads
+ * identically.
+ */
+export function AllocationSliceTooltip({
+  slice,
+  currency,
+}: {
+  slice: AllocationSlice;
+  currency: Currency;
+}) {
   const t = useTranslate();
-  const entry = payload?.[0];
-  const slice = entry?.payload as AllocationSlice | undefined;
-  if (!active || !slice) return null;
-
   return (
     <TooltipSurface
       title={slice.label}
@@ -105,4 +108,16 @@ export function AllocationTooltip({
       ]}
     />
   );
+}
+
+export function AllocationTooltip({
+  active,
+  payload,
+  currency = "USD",
+}: InjectedTooltipProps & { currency: Currency }) {
+  const entry = payload?.[0];
+  const slice = entry?.payload as AllocationSlice | undefined;
+  if (!active || !slice) return null;
+
+  return <AllocationSliceTooltip slice={slice} currency={currency} />;
 }

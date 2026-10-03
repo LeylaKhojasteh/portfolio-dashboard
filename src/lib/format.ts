@@ -134,6 +134,16 @@ export function formatDate(iso: string, style: DateStyle, intl = "en-GB"): strin
 }
 
 /**
+ * Numeric calendar day with no month name — `9/28/2026` in English,
+ * `1405/07/07` in Persian (Jalali).
+ */
+export function formatDay(iso: string, intl = "en-US"): string {
+  const date = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return numericDateFormatter(intl).format(date);
+}
+
+/**
  * Compact status stamp for the toolbar: numeric date plus 24h clock, no month
  * names — `9/30/2026 14:05` in English, `1405/07/08 14:05` in Persian.
  */

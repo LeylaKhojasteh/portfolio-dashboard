@@ -31,7 +31,7 @@ export function CardHeader({ title, icon, action, divided, className }: CardHead
         className,
       )}
     >
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-h-6 min-w-0 items-center gap-2">
         {icon ? (
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-line bg-surface-sunken text-ink-muted">
             {icon}

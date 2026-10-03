@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { ChartNoAxesCombined } from "lucide-react";
 import { useDashboardPreferences } from "@/components/layout/dashboard-preferences";
 import { useLocale, useTranslate } from "@/components/layout/locale-provider";
 import { formatMoney, toToman } from "@/lib/format";
@@ -30,7 +29,6 @@ export function PerformanceCard() {
   return (
     <Card className="h-full">
       <CardHeader
-        icon={<ChartNoAxesCombined className="size-[14px]" strokeWidth={1.8} />}
         title={t("performance.title")}
         action={
           <div className="flex flex-col items-end">

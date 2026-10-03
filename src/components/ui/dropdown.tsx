@@ -57,18 +57,16 @@ export function Dropdown<T extends string>({
         aria-controls={menuId}
         aria-label={ariaLabel}
         className={cx(
-          "flex h-8 cursor-pointer items-center gap-2 rounded-lg border bg-surface-sunken px-2.5 text-[11.5px] font-medium whitespace-nowrap transition-colors duration-200",
-          isOpen
-            ? "border-line-strong bg-surface text-ink shadow-raised"
-            : "border-line text-ink-soft hover:border-line-strong hover:bg-surface hover:text-ink",
+          "flex h-8 cursor-pointer items-center gap-2 rounded-lg border border-accent-deep bg-accent-deep px-2.5 text-[11.5px] font-semibold whitespace-nowrap text-canvas shadow-raised transition-colors duration-200",
+          isOpen && "bg-accent",
         )}
       >
-        <CalendarRange className="size-3.5 shrink-0 text-ink-faint" strokeWidth={1.8} />
-        <span className="text-ink-muted">{label}</span>
-        <span className="font-semibold text-ink">{active?.label}</span>
+        <CalendarRange className="size-3.5 shrink-0 text-canvas" strokeWidth={1.8} />
+        <span className="text-canvas/75">{label}</span>
+        <span className="text-canvas">{active?.label}</span>
         <ChevronDown
           className={cx(
-            "size-3.5 shrink-0 text-ink-faint transition-transform duration-200",
+            "size-3.5 shrink-0 text-canvas/75 transition-transform duration-200",
             isOpen && "rotate-180",
           )}
           strokeWidth={2}
@@ -97,8 +95,8 @@ export function Dropdown<T extends string>({
                 className={cx(
                   "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-start text-[11.5px] transition-colors duration-150",
                   isSelected
-                    ? "bg-surface-sunken font-semibold text-ink shadow-[inset_0_0_0_1px_var(--color-line)]"
-                    : "font-medium text-ink-muted hover:bg-surface-hover hover:text-ink-soft",
+                    ? "bg-accent-deep font-semibold text-canvas"
+                    : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-accent-deep",
                 )}
               >
                 <Check

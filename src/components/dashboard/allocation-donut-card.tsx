@@ -1,11 +1,12 @@
 "use client";
 
-import { ChartPie } from "lucide-react";
+import type { PaletteKey } from "@/lib/chart-theme";
 import { useDashboardPreferences } from "@/components/layout/dashboard-preferences";
 import { useTranslate } from "@/components/layout/locale-provider";
 import { formatMoney, formatNumber, toToman } from "@/lib/format";
 import { ALLOCATION } from "@/lib/mock-data";
 import { AllocationDonutChart } from "@/components/charts/allocation-donut-chart";
+import { AssetIcon } from "@/components/ui/asset-icon";
 import { Card, CardHeader } from "@/components/ui/card";
 
 /** Row 2 right — donut of weights plus a colour-matched, column-aligned legend. */
@@ -18,13 +19,9 @@ export function AllocationDonutCard() {
 
   return (
     <Card className="h-full">
-      <CardHeader
-        icon={<ChartPie className="size-[14px]" strokeWidth={1.8} />}
-        title={t("donut.title")}
-        divided
-      />
+      <CardHeader title={t("donut.title")} />
 
-      <div className="px-4 pt-2">
+      <div className="px-4">
         <AllocationDonutChart data={slices} currency={currency} />
       </div>
 
@@ -41,11 +38,7 @@ export function AllocationDonutCard() {
               className="grid grid-cols-[1fr_48px_76px] items-center gap-2 px-4 py-1 transition-colors hover:bg-accent-soft/50"
             >
               <span className="flex min-w-0 items-center gap-2">
-                <span
-                  className="size-2 shrink-0 rounded-[3px]"
-                  style={{ backgroundColor: slice.color }}
-                  aria-hidden
-                />
+                <AssetIcon assetId={slice.id as PaletteKey} size={16} />
                 <span className="truncate text-[11px] font-medium tracking-tight text-ink">{slice.label}</span>
               </span>
               <span className="numeric text-end text-[11px] text-ink-muted">
