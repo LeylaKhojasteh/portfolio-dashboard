@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AllocationSlice, Currency } from "@/types";
 import { formatNumber } from "@/lib/format";
 import { AllocationSliceTooltip } from "@/components/charts/chart-tooltip";
@@ -15,13 +15,21 @@ interface AllocationStackBarProps {
  * Compact stacked allocation strip. Segment widths are the raw percentages, so
  * the strip is just a second reading of the same dataset the bars and donut use.
  * Segments carry colour and width only — no text is drawn inside them — and
- * hovering one opens the same allocation card the donut and bar charts use.
- * Under RTL the flex row mirrors with the page, keeping the reading order right
- * to left without any extra logic.
+ * hovering or tapping one opens the same allocation card the donut and bar
+ * charts use. Under RTL the flex row mirrors with the page, keeping the reading
+ * order right to left without any extra logic.
  */
 export function AllocationStackBar({ slices, currency, className }: AllocationStackBarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const clearTimer = useRef<number | null>(null);
   const [hovered, setHovered] = useState<{ slice: AllocationSlice; x: number } | null>(null);
+
+  useEffect(
+    () => () => {
+      if (clearTimer.current !== null) window.clearTimeout(clearTimer.current);
+    },
+    [],
+  );
 
   const track = (slice: AllocationSlice, clientX: number) => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -30,6 +38,13 @@ export function AllocationStackBar({ slices, currency, className }: AllocationSt
     const half = 106;
     const x = Math.min(Math.max(clientX - rect.left, half), Math.max(rect.width - half, half));
     setHovered({ slice, x });
+  };
+
+  /* Touch has no hover-out, so the tap tooltip lingers briefly then clears. */
+  const trackTouch = (slice: AllocationSlice, clientX: number) => {
+    track(slice, clientX);
+    if (clearTimer.current !== null) window.clearTimeout(clearTimer.current);
+    clearTimer.current = window.setTimeout(() => setHovered(null), 2400);
   };
 
   return (
@@ -52,6 +67,10 @@ export function AllocationStackBar({ slices, currency, className }: AllocationSt
             className="block min-w-0 cursor-default overflow-hidden first:rounded-s-full last:rounded-e-full"
             style={{ width: `${slice.percentage}%`, backgroundColor: slice.color }}
             onMouseMove={(event) => track(slice, event.clientX)}
+            onTouchStart={(event) => {
+              const touch = event.touches[0];
+              if (touch) trackTouch(slice, touch.clientX);
+            }}
           />
         ))}
       </div>

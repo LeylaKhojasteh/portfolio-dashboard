@@ -25,7 +25,7 @@ export function PagePlaceholder({ titleKey, descriptionKey }: PagePlaceholderPro
 
   return (
     <Card className="items-center justify-center gap-5 px-6 py-12 text-center sm:py-16">
-      <span className="flex size-14 items-center justify-center rounded-2xl border border-line bg-gradient-to-b from-surface to-surface-sunken text-accent shadow-raised">
+      <span className="flex size-14 items-center justify-center rounded-xl border border-line bg-gradient-to-b from-surface to-surface-sunken text-accent shadow-raised">
         <Icon className="size-6" strokeWidth={1.8} />
       </span>
 

@@ -19,7 +19,33 @@ export function AssetsCard() {
     <Card className="h-full overflow-hidden">
       <CardHeader title={t("assets.title")} divided />
 
-      <div className="flex-1 overflow-x-auto">
+      {/* Phone: a scannable list. No horizontal scrolling, no shrink-to-read. */}
+      <ul className="flex-1 divide-y divide-line-soft sm:hidden">
+        {ASSETS.map((asset) => (
+          <li key={asset.id} className="flex items-center gap-3 px-4 py-2.5">
+            <AssetIcon assetId={asset.id} size={30} />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[13px] leading-tight font-medium tracking-tight text-ink">
+                {asset.name}
+              </span>
+              <span className="numeric mt-0.5 block truncate text-[10.5px] leading-tight text-ink-faint">
+                {asset.quantity.toLocaleString("en-US")} {asset.symbol}
+              </span>
+            </span>
+            <span className="shrink-0 text-end">
+              <span className="numeric block text-[13px] leading-tight font-semibold tracking-tight text-ink">
+                {money(asset.value)}
+              </span>
+              <span className="mt-1 flex items-center justify-end">
+                <TrendValue value={asset.change24h} />
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Tablet and up: the full ledger with native-currency detail. */}
+      <div className="hidden flex-1 overflow-x-auto sm:block">
         <table className="w-full min-w-[400px] border-collapse text-start">
           <thead>
             <tr className="border-b border-line bg-surface-sunken/60">
@@ -77,8 +103,8 @@ export function AssetsCard() {
                       </span>
                     </span>
                   </td>
-            </tr>
-          ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

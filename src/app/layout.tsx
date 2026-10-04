@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,9 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meridian · Portfolio Dashboard",
+  title: "Worthline · Portfolio Intelligence",
   description:
     "A high-fidelity prototype for tracking a crypto, equity and gold portfolio across USD and Toman.",
+};
+
+/** `viewportFit: cover` lets the app paint under the notch/home indicator so we
+ *  can pad around the safe areas ourselves. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#efe7d4",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

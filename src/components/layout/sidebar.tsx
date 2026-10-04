@@ -2,29 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ComponentType } from "react";
-import {
-  ArrowLeftRight,
-  ChartNoAxesCombined,
-  LayoutDashboard,
-  LogIn,
-  Settings,
-  Wallet,
-} from "lucide-react";
 import { cx } from "@/lib/cx";
 import { NAV_ITEMS } from "@/lib/navigation";
+import { BrandWordmark } from "@/components/layout/brand-wordmark";
+import { NavIcon } from "@/components/ui/nav-icon";
 import { useTranslate } from "@/components/layout/locale-provider";
-
-type NavIcon = ComponentType<{ className?: string; strokeWidth?: number }>;
-
-const NAV_ICONS: Record<string, NavIcon> = {
-  LayoutDashboard,
-  ArrowLeftRight,
-  Wallet,
-  ChartNoAxesCombined,
-  Settings,
-  LogIn,
-};
 
 export const SIDEBAR_WIDTH = {
   expanded: "w-[280px]",
@@ -35,10 +17,12 @@ interface SidebarProps {
   collapsed: boolean;
   /** Fires on every navigation — the mobile drawer uses it to close itself. */
   onNavigate?: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   className?: string;
 }
 
-export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
+export function Sidebar({ collapsed, onNavigate, onMouseEnter, onMouseLeave, className }: SidebarProps) {
   const pathname = usePathname();
   const t = useTranslate();
 
@@ -49,27 +33,29 @@ export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
         collapsed ? SIDEBAR_WIDTH.collapsed : SIDEBAR_WIDTH.expanded,
         className,
       )}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {/* Brand block — height matches the top bar so both rails line up. */}
       <div
         className={cx(
           "flex h-[60px] shrink-0 items-center border-b border-line-soft transition-[padding] duration-300 ease-out-soft",
-          collapsed ? "justify-center px-2.5" : "gap-2.5 px-4",
+          collapsed ? "justify-center px-2.5" : "px-4",
         )}
       >
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-[9px] border border-accent-line bg-gradient-to-b from-surface to-accent-soft text-accent-deep shadow-raised">
-          <ChartNoAxesCombined className="size-4" strokeWidth={2} />
-        </span>
-        <div
-          className={cx(
-            "min-w-0 overflow-hidden transition-all duration-300 ease-out-soft",
-            collapsed ? "w-0 opacity-0" : "w-auto opacity-100",
-          )}
-        >
-          <p className="truncate text-[12.5px] leading-tight font-semibold tracking-tight text-ink">
-            {t("brand.name")}
-          </p>
-          <p className="truncate text-[10px] leading-tight tracking-wide text-ink-faint">
+        <div className={cx("flex min-w-0 flex-col", collapsed ? "items-center" : "items-start")}>
+          <BrandWordmark
+            name={t("brand.name")}
+            collapsed={collapsed}
+            className="text-[16px] leading-tight font-semibold tracking-tight text-ink"
+            markClassName={collapsed ? "size-8" : "size-6"}
+          />
+          <p
+            className={cx(
+              "truncate text-[10px] leading-tight tracking-wide text-ink-faint transition-all duration-300 ease-out-soft",
+              collapsed ? "w-0 opacity-0" : "mt-0.5 opacity-100",
+            )}
+          >
             {t("brand.subtitle")}
           </p>
         </div>
@@ -77,7 +63,6 @@ export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
 
       <nav className="flex-1 overflow-x-hidden overflow-y-auto px-2.5 pt-3 pb-2">
         {NAV_ITEMS.map((item, index) => {
-          const Icon = NAV_ICONS[item.icon];
           const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           const previous = NAV_ITEMS[index - 1];
           const showSection = Boolean(item.sectionKey) && item.sectionKey !== previous?.sectionKey;
@@ -98,10 +83,10 @@ export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
                 aria-current={isActive ? "page" : undefined}
                 title={collapsed ? t(item.labelKey) : undefined}
                 className={cx(
-                  "group relative mb-0.5 flex h-[34px] items-center rounded-lg text-[12.5px] transition-colors duration-200",
+                  "group relative mb-0.5 flex h-[34px] items-center rounded-md text-[12.5px] transition-[color,background-color,transform] duration-200 active:scale-[0.98]",
                   collapsed ? "w-full justify-center" : "w-full gap-2.5 ps-2.5 pe-2",
                   isActive
-                    ? "bg-accent-deep font-semibold text-canvas shadow-raised"
+                    ? "bg-accent-deep font-semibold text-white shadow-raised"
                     : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-ink",
                 )}
               >
@@ -111,12 +96,12 @@ export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
                     aria-hidden
                   />
                 ) : null}
-                <Icon
+                <NavIcon
+                  name={item.icon}
                   className={cx(
                     "size-[19px] shrink-0 transition-colors duration-200",
-                    isActive ? "text-canvas" : "text-ink-faint group-hover:text-accent",
+                    isActive ? "text-white" : "text-ink-muted group-hover:text-ink",
                   )}
-                  strokeWidth={isActive ? 2.2 : 1.8}
                 />
                 <span
                   className={cx(
@@ -136,12 +121,12 @@ export function Sidebar({ collapsed, onNavigate, className }: SidebarProps) {
       <div className="shrink-0 border-t border-line-soft p-2.5">
         <div
           className={cx(
-            "flex items-center rounded-lg border border-line bg-surface py-1.5 shadow-raised transition-all duration-300 ease-out-soft",
+            "flex items-center rounded-md border border-line bg-surface py-1.5 shadow-raised transition-all duration-300 ease-out-soft",
             collapsed ? "justify-center px-1.5" : "gap-2 px-2",
           )}
         >
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface-sunken text-ink-faint">
-            <LogIn className="size-3.5" strokeWidth={1.8} />
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface-sunken">
+            <NavIcon name="Login-2" className="size-3.5" />
           </span>
 
           <div

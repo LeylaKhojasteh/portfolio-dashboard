@@ -193,7 +193,9 @@ const rateSeries = buildDemoSeries(RATE_LANDMARKS, 0.0012);
 export const PORTFOLIO_SERIES: PortfolioPoint[] = rawPortfolio.map((value, index) => ({
   date: isoDaysAgo(HISTORY_DAYS - 1 - index),
   value,
-  netFlow: index % 23 === 0 ? 200 : index % 17 === 0 ? -100 : 0,
+  /* Small periodic contributions/withdrawals, proportional to the portfolio so
+     the cash-flow-adjusted return stays sensible. */
+  netFlow: index % 23 === 0 ? value * 0.01 : index % 17 === 0 ? -value * 0.006 : 0,
 }));
 
 export const BTC_SERIES = btcPrices;
@@ -272,6 +274,16 @@ function percentChange(series: number[]): number {
 
 export function getPortfolioSeries(range: DateRange): PortfolioPoint[] {
   return sliceByRange(PORTFOLIO_SERIES, range);
+}
+
+/** BTC price window aligned to the portfolio series — used as the benchmark. */
+export function getBtcSeries(range: DateRange): number[] {
+  return sliceByRange(BTC_SERIES, range);
+}
+
+/** USD/Toman rate window aligned to the portfolio series — used for FX effect. */
+export function getRateSeries(range: DateRange): number[] {
+  return sliceByRange(RATE_SERIES, range);
 }
 
 /** Same window as `sliceByRange`, but skips the leading 30-day warm-up period. */

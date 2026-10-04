@@ -10,10 +10,10 @@ export interface NavItem {
 
 /** Sidebar structure only — all copy lives in the locale dictionaries. */
 export const NAV_ITEMS: NavItem[] = [
-  { href: "/", icon: "LayoutDashboard", labelKey: "nav.overview" },
-  { href: "/transactions", icon: "ArrowLeftRight", labelKey: "nav.transactions", sectionKey: "nav.sectionPortfolio" },
-  { href: "/assets", icon: "Wallet", labelKey: "nav.assets" },
-  { href: "/analytics", icon: "ChartNoAxesCombined", labelKey: "nav.analytics" },
-  { href: "/settings", icon: "Settings", labelKey: "nav.settings", sectionKey: "nav.sectionWorkspace" },
-  { href: "/login", icon: "LogIn", labelKey: "nav.login" },
+  { href: "/", icon: "Warehouse", labelKey: "nav.overview" },
+  { href: "/transactions", icon: "Investing-And-Banking", labelKey: "nav.transactions", sectionKey: "nav.sectionPortfolio" },
+  { href: "/assets", icon: "Baggage", labelKey: "nav.assets" },
+  { href: "/analytics", icon: "Signal-Full", labelKey: "nav.analytics" },
+  { href: "/settings", icon: "Sun", labelKey: "nav.settings", sectionKey: "nav.sectionWorkspace" },
+  { href: "/login", icon: "Login-2", labelKey: "nav.login" },
 ];

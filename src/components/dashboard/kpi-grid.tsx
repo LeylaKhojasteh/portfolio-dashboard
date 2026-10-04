@@ -16,9 +16,11 @@ export function KpiGrid() {
   const rangeLabel = rangeLabelKey ? t(rangeLabelKey) : "";
 
   return (
-    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div className="-mx-3 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-3 pb-1 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 xl:grid-cols-6">
       {cards.map((card) => (
-        <KpiCard key={card.id} card={card} rangeLabel={rangeLabel} />
+        <div key={card.id} className="min-w-[224px] shrink-0 snap-start sm:min-w-0 sm:shrink">
+          <KpiCard card={card} rangeLabel={rangeLabel} className="h-full" />
+        </div>
       ))}
     </div>
   );

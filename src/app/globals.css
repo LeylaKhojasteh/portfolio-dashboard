@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces — one warm sheet. Cards sit only a shade above the page. */
-  --color-canvas: #ece5d8;
-  --color-canvas-deep: #e3dacb;
-  --color-surface: #f8f4ec;
-  --color-surface-muted: #f5f0e6;
-  --color-surface-sunken: #ede6d9;
-  --color-surface-hover: #f1ebdf;
+  /* Surfaces — one warm cream family; cards sit only a shade above the page. */
+  --color-canvas: #efe7d4;
+  --color-canvas-deep: #e7dcc4;
+  --color-surface: #faf5ea;
+  --color-surface-muted: #f6f0e2;
+  --color-surface-sunken: #efe7d5;
+  --color-surface-hover: #f3ecdc;
 
-  /* Ink — dark warm grey, never pure black */
-  --color-ink: #241f19;
-  --color-ink-soft: #48413a;
-  --color-ink-muted: #7a7166;
-  --color-ink-faint: #9e9484;
+  /* Ink — dark warm grey, deeper for stronger contrast against cream */
+  --color-ink: #211b13;
+  --color-ink-soft: #443b30;
+  --color-ink-muted: #6e6456;
+  --color-ink-faint: #8d8271;
 
-  /* Lines — warm and deep enough to divide panels without floating them */
-  --color-line: #d9cdb6;
-  --color-line-soft: #e6dcc8;
-  --color-line-strong: #c6b89c;
+  /* Lines — warm and clear enough to divide panels without floating them */
+  --color-line: #d5c6ab;
+  --color-line-soft: #e4d8c2;
+  --color-line-strong: #b9a785;
 
-  /* Primary accent — muted green: navigation, selection, positive figures */
-  --color-accent: #3f6b4d;
-  --color-accent-deep: #2d5339;
-  --color-accent-soft: #e4ecdf;
-  --color-accent-line: #bfd0b6;
-  --color-accent-ring: rgb(63 107 77 / 0.14);
+  /* Primary accent — forest green #427054 */
+  --color-accent: #427054;
+  --color-accent-deep: #2f523d;
+  --color-accent-soft: #e8f3eb;
+  --color-accent-line: #a8cfb6;
+  --color-accent-ring: rgb(66 112 84 / 0.18);
 
   /* Secondary accent — warm gold / earth brown: allocation, secondary marks */
   --color-gold: #8f6f35;
@@ -34,9 +34,9 @@
   --color-gold-line: #ddcba4;
 
   /* Semantics — muted, institutional */
-  --color-positive: #3f6b4d;
-  --color-positive-soft: #e4ecdf;
-  --color-positive-line: #bfd0b6;
+  --color-positive: #427054;
+  --color-positive-soft: #e8f3eb;
+  --color-positive-line: #a8cfb6;
   --color-negative: #9a463c;
   --color-negative-soft: #f3e4e0;
   --color-negative-line: #e0c2bd;
@@ -51,17 +51,16 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* Shadows — shallow. Panels should read as divisions on one sheet, not floating cards. */
-  --shadow-card: 0 1px 0 rgb(36 31 25 / 0.02), 0 1px 2px rgb(36 31 25 / 0.05);
-  --shadow-card-hover: 0 1px 0 rgb(36 31 25 / 0.02), 0 6px 16px -10px rgb(36 31 25 / 0.18);
-  --shadow-raised: 0 1px 0 rgb(36 31 25 / 0.03), 0 1px 2px rgb(36 31 25 / 0.07);
-  --shadow-pop: 0 14px 36px -12px rgb(36 31 25 / 0.28), 0 2px 6px -2px rgb(36 31 25 / 0.1);
+  /* Shadows — very shallow. Hierarchy comes from borders, not lift. */
+  --shadow-card: 0 1px 2px rgb(36 31 25 / 0.04);
+  --shadow-card-hover: 0 3px 8px -5px rgb(36 31 25 / 0.13);
+  --shadow-raised: 0 1px 1px rgb(36 31 25 / 0.05);
+  --shadow-pop: 0 12px 30px -16px rgb(36 31 25 / 0.24), 0 1px 3px -1px rgb(36 31 25 / 0.08);
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-fade-in: fade-in 200ms ease-out both;
-  --animate-slide-in: slide-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-slide-in-rtl: slide-in-rtl 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-sheet-up: sheet-up 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes fade-in {
@@ -73,22 +72,25 @@
   }
 }
 
-@keyframes slide-in {
+/* Bottom sheets rise from the bottom edge on phones. */
+@keyframes sheet-up {
   from {
-    transform: translateX(-100%);
+    transform: translateY(100%);
   }
   to {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
-/* The mobile drawer enters from the other edge in RTL. */
-@keyframes slide-in-rtl {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
+/* Collapse every animation and transition for users who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -105,8 +107,8 @@
     /* One warm sheet: the bloom is subtle so the canvas never reads as flat paper. */
     background-image: radial-gradient(
       120% 88% at 50% -18%,
-      rgb(248 244 236 / 0.7) 0%,
-      rgb(236 229 216 / 0) 66%
+      rgb(250 245 234 / 0.7) 0%,
+      rgb(239 231 212 / 0) 66%
     );
   }
 
@@ -119,6 +121,13 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--color-line-strong) transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Touch devices get honest, app-like feedback instead of a translucent flash. */
+  html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
   /* Numbers, currencies and percentages stay LTR and isolated inside RTL copy. */
@@ -154,6 +163,14 @@
   unicode-bidi: isolate;
 }
 
+/** Horizontal scrollers that should read as a native strip, not a widget. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /** Small uppercase eyebrow used for every panel and table header. */
 @utility eyebrow {
   font-size: 9.5px;
@@ -161,7 +178,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-ink-faint);
+  color: var(--color-ink-muted);
 }
 
 /** Dense table header cell — shared by every ledger column header. */
@@ -171,7 +188,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-ink-faint);
+  color: var(--color-ink-muted);
 }
 
 /** Ledger row hover — a faint green wash that reads as "live" without shouting.

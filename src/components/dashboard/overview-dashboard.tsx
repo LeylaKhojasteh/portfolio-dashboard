@@ -15,23 +15,23 @@ export function OverviewDashboard() {
     <>
       <KpiGrid />
 
-      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
-        <div className="min-w-0 xl:col-span-9">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="min-w-0">
           <PerformanceCard />
         </div>
-        <div className="min-w-0 xl:col-span-3">
+        <div className="min-w-0">
           <AllocationDonutCard />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
-        <div className="min-w-0 xl:col-span-3">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,6fr)_minmax(0,4fr)]">
+        <div className="min-w-0">
           <AllocationCard />
         </div>
-        <div className="min-w-0 xl:col-span-6">
+        <div className="min-w-0">
           <AssetsCard />
         </div>
-        <div className="min-w-0 xl:col-span-3">
+        <div className="min-w-0">
           <TransactionsCard />
         </div>
       </div>

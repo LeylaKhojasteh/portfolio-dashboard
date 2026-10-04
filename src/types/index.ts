@@ -7,6 +7,9 @@ export type TransactionType = "BUY" | "SELL" | "TRANSFER" | "DEPOSIT" | "WITHDRA
 
 export type DateRange = "D" | "W" | "1M" | "3M" | "6M" | "1Y";
 
+/** What the performance chart plots on its primary series. */
+export type PerformanceMode = "value" | "return" | "drawdown";
+
 export type TrendDirection = "up" | "down" | "flat";
 
 export interface Asset {

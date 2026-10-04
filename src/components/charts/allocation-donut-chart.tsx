@@ -7,6 +7,7 @@ import { CHART_TOKENS } from "@/lib/chart-theme";
 import { formatMoney, toToman } from "@/lib/format";
 import { useTranslate } from "@/components/layout/locale-provider";
 import { AllocationTooltip } from "@/components/charts/chart-tooltip";
+import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 
 interface AllocationDonutChartProps {
   data: AllocationSlice[];
@@ -20,12 +21,13 @@ interface AllocationDonutChartProps {
 export function AllocationDonutChart({ data, currency }: AllocationDonutChartProps) {
   const t = useTranslate();
   const [isHovered, setIsHovered] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const totalUsd = data.reduce((total, slice) => total + slice.value, 0);
   const total = currency === "USD" ? totalUsd : toToman(totalUsd);
 
   return (
-    <div className="relative mx-auto h-[112px] w-full max-w-[248px] overflow-hidden">
+    <div className="relative mx-auto h-[132px] w-full max-w-[248px] overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <Tooltip content={<AllocationTooltip currency={currency} />} />
@@ -38,6 +40,7 @@ export function AllocationDonutChart({ data, currency }: AllocationDonutChartPro
             paddingAngle={1.5}
             stroke={CHART_TOKENS.tooltipSurface}
             strokeWidth={1}
+            isAnimationActive={!reducedMotion}
             animationDuration={750}
           >
             {data.map((slice) => (

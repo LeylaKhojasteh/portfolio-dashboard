@@ -4,7 +4,7 @@
  */
 export const en = {
   brand: {
-    name: "Meridian",
+    name: "Worthline",
     subtitle: "Portfolio Intelligence",
   },
   nav: {
@@ -19,6 +19,7 @@ export const en = {
     collapse: "Collapse sidebar",
     expand: "Expand sidebar",
     open: "Open navigation",
+    primary: "Primary",
   },
   account: {
     name: "Reza Ahmadi",
@@ -33,6 +34,9 @@ export const en = {
     refresh: "Refresh data",
     language: "Interface language",
     currency: "Display currency",
+    display: "Display",
+    done: "Done",
+    close: "Close",
   },
   range: {
     label: "Time Range",
@@ -60,6 +64,18 @@ export const en = {
     subtitleYear: "Value over the selected year",
     value: "Portfolio Value",
     observations: "{count} observations · {range}",
+    mode: {
+      value: "Value",
+      return: "Return",
+      drawdown: "Drawdown",
+    },
+    metrics: {
+      return: "Return",
+      maxDrawdown: "Max drawdown",
+      volatility: "Volatility",
+      bestDay: "Best day",
+      fxEffect: "FX effect",
+    },
   },
   allocation: {
     title: "Asset Allocation",
@@ -103,9 +119,15 @@ export const en = {
     rate: "Rate 1 USD = {rate} Toman",
     allocation: "Allocation",
     value: "Value",
+    change: "Change",
+    sinceStart: "Since start",
+    periodReturn: "Period return",
   },
   chart: {
     average: "period average",
+    baseline: "range start",
+    benchmark: "Benchmark",
+    portfolio: "Portfolio",
   },
   placeholder: {
     transactions: {

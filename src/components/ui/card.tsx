@@ -9,7 +9,7 @@ interface CardProps {
 /** Elevated warm-white surface used by every panel on the dashboard. */
 export function Card({ className, children }: CardProps) {
   return (
-    <section className={cx("card-surface flex min-w-0 flex-col rounded-xl", className)}>{children}</section>
+    <section className={cx("card-surface flex min-w-0 flex-col rounded-lg", className)}>{children}</section>
   );
 }
 
@@ -26,7 +26,7 @@ export function CardHeader({ title, icon, action, divided, className }: CardHead
   return (
     <header
       className={cx(
-        "flex items-center justify-between gap-4 px-4 pt-3 pb-2.5",
+        "flex flex-col gap-2 px-4 pt-3 pb-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4",
         divided && "border-b border-line-soft",
         className,
       )}

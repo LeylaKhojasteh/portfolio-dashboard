@@ -1,6 +1,7 @@
 "use client";
 
 import { CHART_TOKENS } from "@/lib/chart-theme";
+import { cx } from "@/lib/cx";
 import { formatNumber } from "@/lib/format";
 import type { KpiAccent, KpiCardData } from "@/types";
 import { Sparkline } from "@/components/charts/sparkline";
@@ -20,6 +21,7 @@ interface KpiCardProps {
   card: KpiCardData;
   /** Already-localized label for the active range, used by `vsPreviousRange`. */
   rangeLabel: string;
+  className?: string;
 }
 
 /** Resolves the structured trend qualifier into a localized string. */
@@ -34,12 +36,17 @@ function trendLabelText(card: KpiCardData, rangeLabel: string, t: ReturnType<typ
  * Headline metric tile in a compact horizontal arrangement: label, value and
  * change stacked on the left, a small trend line pinned to the right.
  */
-export function KpiCard({ card, rangeLabel }: KpiCardProps) {
+export function KpiCard({ card, rangeLabel, className }: KpiCardProps) {
   const t = useTranslate();
   const compact = Math.abs(card.value) >= 100_000_000;
 
   return (
-    <Card className="group gap-0 overflow-hidden p-3 transition-[box-shadow,border-color,transform] duration-300 ease-out-soft hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+    <Card
+      className={cx(
+        "group gap-0 overflow-hidden p-3 transition-[box-shadow,border-color,transform] duration-300 ease-out-soft hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover active:scale-[0.99]",
+        className,
+      )}
+    >
       <h3 className="eyebrow line-clamp-1">{t(card.titleKey)}</h3>
 
       <div className="mt-2 flex items-end justify-between gap-2">

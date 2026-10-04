@@ -62,13 +62,13 @@ export function SegmentedControl<T extends string>({
       role="radiogroup"
       aria-label={ariaLabel}
       className={cx(
-        "relative inline-flex h-8 items-center rounded-lg border border-line bg-surface p-1 shadow-[inset_0_1px_2px_rgb(36_31_25/0.04)]",
+        "relative inline-flex h-8 items-center rounded-md border border-line bg-surface p-1 shadow-[inset_0_1px_2px_rgb(36_31_25/0.04)]",
         className,
       )}
     >
       <span
         aria-hidden
-        className="absolute top-1 bottom-1 rounded-md border border-accent-deep bg-accent-deep shadow-raised transition-all duration-200 ease-out-soft"
+        className="absolute top-1 bottom-1 rounded border border-accent-deep bg-accent-deep shadow-raised transition-all duration-200 ease-out-soft"
         style={{ left: indicator.left, width: indicator.width }}
       />
       {options.map((option, index) => {
@@ -86,7 +86,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(option.value)}
             title={titleFor?.(option.value)}
             className={cx(
-              "relative z-10 flex cursor-pointer items-center rounded-md px-2.5 text-[11px] whitespace-nowrap transition-colors duration-200",
+              "relative z-10 flex cursor-pointer items-center rounded px-2.5 text-[11px] whitespace-nowrap transition-[color,background-color,transform] duration-200 active:scale-[0.98]",
               isActive
                 ? "font-semibold text-canvas"
                 : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-accent-deep",

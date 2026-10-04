@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Currency, DateRange } from "@/types";
 import { DashboardPreferencesProvider } from "@/components/layout/dashboard-preferences";
-import { LocaleProvider, useTranslate } from "@/components/layout/locale-provider";
+import { LocaleProvider } from "@/components/layout/locale-provider";
+import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopBar } from "@/components/layout/top-bar";
 
@@ -17,56 +18,32 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 }
 
 /**
- * Application frame: collapsible sidebar (desktop rail + mobile drawer),
- * sticky toolbar, and the scrollable content region.
+ * Application frame. On `lg` and up it is the collapsible sidebar rail plus the
+ * sticky toolbar; below `lg` the rail is replaced by an app-native bottom tab
+ * bar and the toolbar collapses to a single scrollable control strip.
  */
 function DashboardFrame({ children }: { children: ReactNode }) {
-  const t = useTranslate();
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [currency, setCurrency] = useState<Currency>("USD");
   const [dateRange, setDateRange] = useState<DateRange>("6M");
 
-  // The rail starts collapsed and opens on hover. It is absolutely positioned
-  // inside a fixed 72px column, so expanding never reflows the page content.
+  // The rail starts collapsed and opens on hover. It is sticky inside a fixed
+  // 72px column, so expanding overlays content without ever reflowing it.
   const isSidebarCollapsed = !isSidebarHovered;
-
-  useEffect(() => {
-    if (!isMobileNavOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMobileNavOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isMobileNavOpen]);
 
   return (
     <DashboardPreferencesProvider value={{ currency, dateRange, setCurrency, setDateRange }}>
-      <div className="flex min-h-screen bg-canvas">
+      <div className="flex min-h-dvh bg-canvas">
         <div
-          className="relative hidden h-screen w-[72px] shrink-0 lg:block"
+          className="sticky top-0 z-40 hidden h-dvh w-[72px] shrink-0 self-start lg:block"
+        >
+        <Sidebar
+          collapsed={isSidebarCollapsed}
           onMouseEnter={() => setIsSidebarHovered(true)}
           onMouseLeave={() => setIsSidebarHovered(false)}
-        >
-          <Sidebar
-            collapsed={isSidebarCollapsed}
-            className="absolute inset-y-0 start-0 z-40 shadow-pop"
-          />
+          className="absolute inset-y-0 start-0 z-40 shadow-pop"
+        />
         </div>
-
-        {isMobileNavOpen ? (
-          <>
-            <button
-              type="button"
-              aria-label={t("nav.open")}
-              onClick={() => setIsMobileNavOpen(false)}
-              className="animate-fade-in fixed inset-0 z-40 cursor-default bg-ink/25 backdrop-blur-[2px] lg:hidden"
-            />
-            <div className="animate-slide-in fixed inset-y-0 start-0 z-50 lg:hidden rtl:animate-slide-in-rtl">
-              <Sidebar collapsed={false} onNavigate={() => setIsMobileNavOpen(false)} />
-            </div>
-          </>
-        ) : null}
 
         <div className="flex min-w-0 flex-1 flex-col">
           <TopBar
@@ -74,13 +51,14 @@ function DashboardFrame({ children }: { children: ReactNode }) {
             onCurrencyChange={setCurrency}
             dateRange={dateRange}
             onDateRangeChange={setDateRange}
-            onOpenMobileNav={() => setIsMobileNavOpen(true)}
           />
-          <main className="flex-1 px-3 py-3 sm:px-4 lg:px-5 lg:py-4">
+          <main className="flex-1 px-3 pt-3 pb-24 sm:px-4 lg:px-5 lg:py-4">
             <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-3">{children}</div>
           </main>
         </div>
       </div>
+
+      <MobileTabBar />
     </DashboardPreferencesProvider>
   );
 }

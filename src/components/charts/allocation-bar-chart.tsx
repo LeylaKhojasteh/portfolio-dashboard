@@ -5,6 +5,7 @@ import type { AllocationSlice, Currency } from "@/types";
 import { CHART_TOKENS } from "@/lib/chart-theme";
 import { formatNumber } from "@/lib/format";
 import { AllocationTooltip } from "@/components/charts/chart-tooltip";
+import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 
 interface AllocationBarChartProps {
   data: AllocationSlice[];
@@ -14,6 +15,7 @@ interface AllocationBarChartProps {
 /** Horizontal bars ranked by weight, one muted hue per asset class, drawn on a track. */
 export function AllocationBarChart({ data, currency }: AllocationBarChartProps) {
   const maxPercentage = Math.max(...data.map((slice) => slice.percentage));
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
     // Recharts does not mirror cartesian axes, so the plot stays LTR inside the
@@ -43,6 +45,7 @@ export function AllocationBarChart({ data, currency }: AllocationBarChartProps) 
             dataKey="percentage"
             barSize={14}
             radius={[5, 5, 5, 5]}
+            isAnimationActive={!reducedMotion}
             animationDuration={650}
             background={{ fill: CHART_TOKENS.track, radius: 5 }}
           >

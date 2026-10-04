@@ -2,7 +2,7 @@ import type { Dictionary } from "@/locales";
 
 export const fa: Dictionary = {
   brand: {
-    name: "مریدین",
+    name: "Worthline",
     subtitle: "هوش پرتفوی",
   },
   nav: {
@@ -17,6 +17,7 @@ export const fa: Dictionary = {
     collapse: "بستن منو",
     expand: "باز کردن منو",
     open: "باز کردن ناوبری",
+    primary: "اصلی",
   },
   account: {
     name: "رضا احمدی",
@@ -31,6 +32,9 @@ export const fa: Dictionary = {
     refresh: "به‌روزرسانی داده‌ها",
     language: "زبان رابط کاربری",
     currency: "ارز نمایش",
+    display: "نمایش",
+    done: "تأیید",
+    close: "بستن",
   },
   range: {
     label: "بازه زمانی",
@@ -58,6 +62,18 @@ export const fa: Dictionary = {
     subtitleYear: "ارزش در سال انتخابی",
     value: "ارزش پرتفوی",
     observations: "{count} رکورد · {range}",
+    mode: {
+      value: "ارزش",
+      return: "بازده",
+      drawdown: "افت",
+    },
+    metrics: {
+      return: "بازده",
+      maxDrawdown: "حداکثر افت",
+      volatility: "نوسان",
+      bestDay: "بهترین روز",
+      fxEffect: "اثر ارز",
+    },
   },
   allocation: {
     title: "ترکیب دارایی‌ها",
@@ -101,9 +117,15 @@ export const fa: Dictionary = {
     rate: "نرخ هر دلار = {rate} تومان",
     allocation: "سهم تخصیص",
     value: "ارزش",
+    change: "تغییر",
+    sinceStart: "از ابتدای بازه",
+    periodReturn: "بازده دوره",
   },
   chart: {
     average: "میانگین دوره",
+    baseline: "شروع بازه",
+    benchmark: "شاخص مبنا",
+    portfolio: "پرتفوی",
   },
   placeholder: {
     transactions: {

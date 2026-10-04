@@ -57,7 +57,7 @@ export function Dropdown<T extends string>({
         aria-controls={menuId}
         aria-label={ariaLabel}
         className={cx(
-          "flex h-8 cursor-pointer items-center gap-2 rounded-lg border border-accent-deep bg-accent-deep px-2.5 text-[11.5px] font-semibold whitespace-nowrap text-canvas shadow-raised transition-colors duration-200",
+          "flex h-8 cursor-pointer items-center gap-2 rounded-md border border-accent-deep bg-accent-deep px-2.5 text-[11.5px] font-semibold whitespace-nowrap text-canvas shadow-raised transition-[color,background-color,transform] duration-200 active:scale-[0.98]",
           isOpen && "bg-accent",
         )}
       >
@@ -78,7 +78,7 @@ export function Dropdown<T extends string>({
           id={menuId}
           role="listbox"
           aria-label={ariaLabel}
-          className="absolute top-full start-0 z-50 mt-1 min-w-[168px] overflow-hidden rounded-lg border border-line bg-surface p-1 shadow-pop"
+          className="absolute top-full start-0 z-50 mt-1 min-w-[168px] overflow-hidden rounded-md border border-line bg-surface p-1 shadow-pop"
         >
           {options.map((option) => {
             const isSelected = option.value === value;
@@ -93,7 +93,7 @@ export function Dropdown<T extends string>({
                   setIsOpen(false);
                 }}
                 className={cx(
-                  "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-start text-[11.5px] transition-colors duration-150",
+                  "flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-start text-[11.5px] transition-colors duration-150",
                   isSelected
                     ? "bg-accent-deep font-semibold text-canvas"
                     : "font-medium text-ink-muted hover:bg-accent-soft/60 hover:text-accent-deep",

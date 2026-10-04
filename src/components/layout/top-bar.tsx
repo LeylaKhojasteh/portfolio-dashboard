@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import type { Currency, DateRange } from "@/types";
 import { cx } from "@/lib/cx";
 import { CURRENCY_OPTIONS, DATE_RANGE_OPTIONS, SNAPSHOT_DATE, SNAPSHOT_TIME } from "@/lib/mock-data";
 import { formatStamp } from "@/lib/format";
 import { LOCALES, LOCALE_LIST, type Locale } from "@/locales";
 import { useLocale, useTranslate } from "@/components/layout/locale-provider";
+import { BrandWordmark } from "@/components/layout/brand-wordmark";
+import { MobileControls } from "@/components/layout/mobile-controls";
 import { Dropdown } from "@/components/ui/dropdown";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
@@ -18,7 +20,6 @@ interface TopBarProps {
   onCurrencyChange: (currency: Currency) => void;
   dateRange: DateRange;
   onDateRangeChange: (range: DateRange) => void;
-  onOpenMobileNav: () => void;
 }
 
 export function TopBar({
@@ -26,7 +27,6 @@ export function TopBar({
   onCurrencyChange,
   dateRange,
   onDateRangeChange,
-  onOpenMobileNav,
 }: TopBarProps) {
   const t = useTranslate();
   const { locale, setLocale, numericIntl } = useLocale();
@@ -43,25 +43,22 @@ export function TopBar({
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-[1720px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2 sm:px-4 lg:h-[60px] lg:flex-nowrap lg:py-0">
+    <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 pt-[env(safe-area-inset-top)] backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-[1720px] items-center gap-3 px-3 py-2 sm:px-4 lg:h-[60px] lg:gap-4 lg:py-0">
         {/* Identity */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <button
-            type="button"
-            onClick={onOpenMobileNav}
-            aria-label={t("nav.open")}
-            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface-sunken text-ink-soft transition-colors hover:text-ink lg:hidden"
-          >
-            <Menu className="size-4" strokeWidth={1.9} />
-          </button>
-          <h1 className="truncate text-[14px] leading-tight font-semibold tracking-tight text-ink">
+          <BrandWordmark
+            name={t("brand.name")}
+            className="text-[17px] leading-tight font-semibold tracking-tight text-ink lg:hidden"
+            markClassName="size-6"
+          />
+          <h1 className="hidden min-w-0 truncate text-[14px] leading-tight font-semibold tracking-tight text-ink lg:block">
             {t("topbar.title")}
           </h1>
         </div>
 
-        {/* One control group: period, language, currency, status */}
-        <div className="order-last flex w-full flex-wrap items-center gap-x-4 gap-y-2 md:justify-end lg:order-none lg:w-auto">
+        {/* Desktop / wide tablet: inline controls */}
+        <div className="hidden items-center gap-3 lg:flex">
           <Dropdown
             ariaLabel={t("range.label")}
             label={t("range.label")}
@@ -100,11 +97,20 @@ export function TopBar({
             onClick={handleRefresh}
             aria-label={t("topbar.refresh")}
             title={t("topbar.refresh")}
-            className="hidden size-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface-sunken text-ink-muted transition-colors hover:text-ink md:flex"
+            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-line bg-surface-sunken text-ink-muted transition-[color,transform] hover:text-ink active:scale-[0.98]"
           >
             <RefreshCw className={cx("size-3.5", isRefreshing && "animate-spin")} strokeWidth={1.9} />
           </button>
         </div>
+
+        {/* Phones / small tablets: one trigger that opens the display sheet */}
+        <MobileControls
+          className="lg:hidden"
+          currency={currency}
+          onCurrencyChange={onCurrencyChange}
+          dateRange={dateRange}
+          onDateRangeChange={onDateRangeChange}
+        />
       </div>
     </header>
   );
